@@ -15,7 +15,8 @@ export function Navbar({ isConnected, onConnect, onDisconnect }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
       <div className="container flex h-14 items-center justify-between">
-        <Link href="/dashboard" className="font-semibold tracking-tight">
+        <Link href="/dashboard" className="font-semibold tracking-tight flex items-center gap-2">
+          <img src="/latio_isologo.svg" alt="Latio" className="h-8 w-8 drop-shadow-sm hover:drop-shadow-md transition-all duration-300" />
           <span className="latio-gradient bg-clip-text text-transparent text-xl">Latio</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm">
