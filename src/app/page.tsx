@@ -1,2 +1,5 @@
-import { LandingScreen } from "@/modules/marketing/ui/LandingScreen";
-export default function Page() { return <LandingScreen />; }
+import { redirect } from "next/navigation";
+
+export default function Page() {
+  redirect("/");
+}

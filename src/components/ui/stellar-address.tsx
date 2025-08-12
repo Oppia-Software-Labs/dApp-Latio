@@ -11,7 +11,10 @@ const formatStellarAddress = (address: string): string => {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
 
-export function StellarAddress({ address, className = "" }: StellarAddressProps) {
+export function StellarAddress({
+  address,
+  className = "",
+}: StellarAddressProps) {
   return (
     <span className={`font-mono ${className}`}>
       {formatStellarAddress(address)}
