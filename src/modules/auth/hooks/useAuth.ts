@@ -1,7 +1,7 @@
 import { useWalletStore } from "../state/wallet.store";
 
 export function useAuth() {
-  const { keyId, contractId, isLoading, error, success, connect, register, disconnect, clearError, clearSuccess } = useWalletStore();
+  const { keyId, contractId, isLoading, error, connect, register, disconnect, clearError } = useWalletStore();
 
   const isAuthenticated = !!keyId && !!contractId;
 
@@ -11,7 +11,6 @@ export function useAuth() {
     contractId,
     isLoading,
     error,
-    success,
     isAuthenticated,
     
     // Actions
@@ -19,6 +18,5 @@ export function useAuth() {
     register,
     disconnect,
     clearError,
-    clearSuccess,
   };
 }
