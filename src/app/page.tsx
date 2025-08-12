@@ -190,10 +190,10 @@ export default function LandingPage() {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Blockchain Security</CardTitle>
-                <CardDescription>
-                  Built on Stellar's proven blockchain infrastructure
-                </CardDescription>
+                                 <CardTitle>Blockchain Security</CardTitle>
+                 <CardDescription>
+                   Built on Stellar&apos;s proven blockchain infrastructure
+                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-gray-600">
