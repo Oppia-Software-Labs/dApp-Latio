@@ -1,0 +1,289 @@
+# frontend-rule.mdc — Latio-POC Frontend Rules
+
+> **Purpose**: Enforce a clean, **modules-first** architecture in Latio (Next.js App Router). Pages are thin. UI lives in `modules/**/ui`. Logic lives in `modules/**/hooks` and `services`. State in `modules/**/state`. Shared primitives in `components/ui`.
+
+---
+
+## TL;DR
+
+* **Pages** render a single screen from `src/modules/**/ui/*`. **Zero business logic**.
+* **UI vs Logic**: UI = presentational/client; Logic = hooks/services/state.
+* **Client boundaries**: Server components by default; add `"use client"` only in UI leaf components.
+* **State**: Zustand per module, minimal persisted keys.
+* **Effects**: External calls (HTTP/Stellar/Passkey) are isolated in `services/`.
+* **Types**: No `any`. One `types/` file per module.
+
+---
+
+## Directory Contract
+
+```
+src/
+  app/                           # Next.js App Router (pages are thin)
+    (auth)/
+      login/page.tsx
+      register/page.tsx
+    (dashboard)/
+      dashboard/page.tsx
+  components/
+    ui/                          # Shared primitives (shadcn wrappers, buttons, inputs)
+  modules/                       # Feature modules (self-contained)
+    auth/
+      ui/
+        LoginScreen.tsx
+        RegisterScreen.tsx
+      hooks/
+        useLogin.ts
+        useRegister.ts
+      services/
+        passkey.service.ts
+      state/
+        wallet.store.ts
+      types/
+        auth.types.ts
+      lib/
+        mappers.ts
+  lib/
+    passkey.ts                   # Low-level clients (SDK setup)
+    http.ts                      # Axios/TanStack Query config if used
+  config/
+    env.ts
+  styles/
+```
+
+> **Rule**: Anything a route renders must live in `src/modules/**/ui`. Pages import and render only.
+
+---
+
+## Hard Rules
+
+1. **Pages (App Router)**
+
+   * No data fetching, no side effects, no business logic.
+   * Render a single screen component from `modules/**/ui`.
+   * Avoid `"use client"` at page level unless truly required by the page itself.
+
+2. **UI (modules/**/ui)\*\*
+
+   * Presentational, reactive, client-only. Add `"use client"` at the top.
+   * Receives data and actions via props or hooks.
+   * No direct HTTP/Stellar/Passkey calls.
+
+3. **Hooks (modules/**/hooks)\*\*
+
+   * Own all orchestration logic (async flows, branching, retries).
+   * No DOM or rendering.
+   * Call `services/` + `state/`. Return typed objects/functions.
+
+4. **Services (modules/**/services)\*\*
+
+   * Only side-effects: HTTP, Stellar RPC, Passkey Kit, storage.
+   * Map low-level SDK responses to typed domain objects.
+   * No component state.
+
+5. **State (modules/**/state)\*\*
+
+   * Zustand per module; minimal state and persistence.
+   * No network calls inside the store; delegate to `services/` via actions.
+
+6. **Types (modules/**/types)\*\*
+
+   * Centralize domain types per module. No `any`.
+
+7. **Client Boundaries**
+
+   * Default to Server Components. Mark UI leaf components with `"use client"`.
+   * Access env via `config/env.ts`; never `process.env` sprinkled across the app.
+
+8. **Styling & UI**
+
+   * Tailwind + shadcn/ui. No inline styles except dynamic one-offs.
+   * Icons via `lucide-react`. Keep UI consistent with design tokens.
+
+9. **Error Handling**
+
+   * Services throw or return typed errors. Hooks decide presentation (toasts, banners).
+   * UI never swallows errors silently.
+
+10. **Performance**
+
+    * Code-split heavy UI with `next/dynamic` when needed.
+    * Keep stores small; avoid unnecessary re-renders.
+
+11. **Naming**
+
+    * Components: `PascalCase`. Files: `kebab-case` or `PascalCase.tsx` for components.
+    * One screen per file under `ui/` (`LoginScreen.tsx`, `PaymentsScreen.tsx`).
+
+---
+
+## Page Stubs (Thin)
+
+```tsx
+// app/(auth)/login/page.tsx
+import { LoginScreen } from "@/modules/auth/ui/LoginScreen";
+export default function Page() { return <LoginScreen />; }
+```
+
+```tsx
+// app/(dashboard)/dashboard/page.tsx
+import { DashboardScreen } from "@/modules/dashboard/ui/DashboardScreen";
+export default function Page() { return <DashboardScreen />; }
+```
+
+---
+
+## UI Stub (Presentational)
+
+```tsx
+// src/modules/auth/ui/LoginScreen.tsx
+"use client";
+import { Button } from "@/components/ui/button";
+import { useLogin } from "../hooks/useLogin";
+
+export function LoginScreen() {
+  const { connect, isLoading, error } = useLogin();
+  return (
+    <div className="flex items-center justify-center py-12">
+      <div className="max-w-md w-full space-y-6 p-6 bg-white rounded-xl shadow">
+        <h1 className="text-2xl font-semibold text-center">Login with Passkey</h1>
+        <Button onClick={connect} disabled={isLoading} className="w-full">
+          {isLoading ? "Connecting..." : "Connect"}
+        </Button>
+        {error && <p className="text-center text-sm text-red-600">{error}</p>}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## Hook Stub (Logic)
+
+```ts
+// src/modules/auth/hooks/useLogin.ts
+import { useWalletStore } from "../state/wallet.store";
+
+export function useLogin() {
+  const { connect, isLoading, error } = useWalletStore();
+  return { connect, isLoading, error };
+}
+```
+
+---
+
+## Service Stub (Side-effects)
+
+```ts
+// src/modules/auth/services/passkey.service.ts
+import { account, server } from "@/lib/passkey";
+import base64url from "base64url";
+
+export async function connectWallet(keyId?: string) {
+  const { keyId: kid, contractId } = await account.connectWallet({
+    keyId,
+    getContractId: (keyId) => server.getContractId({ keyId }),
+  });
+  return { keyId: base64url(kid), contractId } as const;
+}
+
+export async function registerWallet(name: string) {
+  const { keyId: kid, contractId, signedTx } = await account.createWallet("Latio", name);
+  await server.send(signedTx);
+  return { keyId: base64url(kid), contractId } as const;
+}
+```
+
+---
+
+## State Stub (Zustand)
+
+```ts
+// src/modules/auth/state/wallet.store.ts
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { connectWallet, registerWallet } from "../services/passkey.service";
+
+interface State { keyId: string | null; contractId: string | null; isLoading: boolean; error: string | null; }
+interface Actions { connect: (keyId?: string) => Promise<void>; register: (name: string) => Promise<void>; disconnect: () => void; }
+
+export const useWalletStore = create<State & Actions>()(
+  persist(
+    (set) => ({
+      keyId: null,
+      contractId: null,
+      isLoading: false,
+      error: null,
+
+      async connect(keyId) {
+        set({ isLoading: true, error: null });
+        try { const res = await connectWallet(keyId); set({ ...res, isLoading: false }); }
+        catch (e: unknown) { set({ isLoading: false, error: e instanceof Error ? e.message : "Connection failed" }); }
+      },
+
+      async register(name) {
+        set({ isLoading: true, error: null });
+        try { const res = await registerWallet(name); set({ ...res, isLoading: false }); }
+        catch (e: unknown) { set({ isLoading: false, error: e instanceof Error ? e.message : "Registration failed" }); }
+      },
+
+      disconnect() { set({ keyId: null, contractId: null, error: null }); },
+    }),
+    { name: "latio-wallet", storage: createJSONStorage(() => localStorage), partialize: (s) => ({ keyId: s.keyId, contractId: s.contractId }) }
+  )
+);
+```
+
+---
+
+## Env Access
+
+```ts
+// src/config/env.ts
+export const ENV = {
+  RPC_URL: process.env.NEXT_PUBLIC_RPC_URL!,
+  NETWORK_PASSPHRASE: process.env.NEXT_PUBLIC_NETWORK_PASSPHRASE!,
+};
+```
+
+* Never reach into `process.env` from UI; import from `config/env.ts`.
+
+---
+
+## Cursor "Agents" (Prompts you can paste)
+
+**Page Agent**
+
+> Create a thin page at `app/(auth)/login/page.tsx` that only renders `LoginScreen` from `@/modules/auth/ui/LoginScreen`. Do not add logic or a client directive.
+
+**UI Agent**
+
+> Create `src/modules/auth/ui/LoginScreen.tsx` as a presentational client component using shadcn `Button` and the `useLogin` hook. Do not add business logic.
+
+**Hook Agent**
+
+> Implement `src/modules/auth/hooks/useLogin.ts` that exposes `{ connect, isLoading, error }` by delegating to the module store. No UI code.
+
+**Service Agent**
+
+> Create `src/modules/auth/services/passkey.service.ts` with `connectWallet` and `registerWallet` using `@/lib/passkey`, returning typed values.
+
+**State Agent**
+
+> Create a Zustand store at `src/modules/auth/state/wallet.store.ts` that calls the services and persists `{ keyId, contractId }` only.
+
+---
+
+## PR Checklist
+
+* [ ] Pages are thin and import only `modules/**/ui/*` screens.
+* [ ] No business logic in UI components; async flows live in hooks/services.
+* [ ] Types updated; no `any`.
+* [ ] Store state minimal and serializable; persisted keys reviewed.
+* [ ] `"use client"` added only where necessary.
+* [ ] Docs/tests updated when applicable.
+
+---
+
+**How to use**: Keep this file at repo root. Before coding, copy the relevant **Agent** prompt into Cursor and adjust paths/names. Enforce these rules on every PR.
