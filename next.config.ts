@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  transpilePackages: ["passkey-kit", "passkey-kit-sdk"],
 };
 
 export default nextConfig;
