@@ -7,6 +7,7 @@ interface State {
   contractId: string | null;
   isLoading: boolean;
   error: string | null;
+  success: string | null;
 }
 
 interface Actions {
@@ -14,6 +15,7 @@ interface Actions {
   register: (name: string) => Promise<void>;
   disconnect: () => void;
   clearError: () => void;
+  clearSuccess: () => void;
 }
 
 export const useWalletStore = create<State & Actions>()(
@@ -23,49 +25,72 @@ export const useWalletStore = create<State & Actions>()(
       contractId: null,
       isLoading: false,
       error: null,
+      success: null,
 
       async connect(keyId) {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true, error: null, success: null });
         try {
           const result = await connectWallet(keyId);
           set({ 
             keyId: result.keyId, 
             contractId: result.contractId, 
             isLoading: false,
-            error: null
+            error: null,
+            success: "¡Wallet conectada exitosamente!"
           });
+          
+          // Redirigir al dashboard después de un breve delay
+          setTimeout(() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = '/dashboard';
+            }
+          }, 1500);
         } catch (e: unknown) {
           set({ 
             isLoading: false, 
-            error: e instanceof Error ? e.message : "Error al conectar wallet" 
+            error: e instanceof Error ? e.message : "Error al conectar wallet",
+            success: null
           });
         }
       },
 
       async register(name) {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true, error: null, success: null });
         try {
           const result = await registerWallet(name);
           set({ 
             keyId: result.keyId, 
             contractId: result.contractId, 
             isLoading: false,
-            error: null
+            error: null,
+            success: `¡Wallet "${name}" creada exitosamente!`
           });
+          
+          // Redirigir al dashboard después de un breve delay
+          setTimeout(() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = '/dashboard';
+            }
+          }, 1500);
         } catch (e: unknown) {
           set({ 
             isLoading: false, 
-            error: e instanceof Error ? e.message : "Error al crear wallet" 
+            error: e instanceof Error ? e.message : "Error al crear wallet",
+            success: null
           });
         }
       },
 
       disconnect() {
-        set({ keyId: null, contractId: null, error: null });
+        set({ keyId: null, contractId: null, error: null, success: null });
       },
 
       clearError() {
         set({ error: null });
+      },
+
+      clearSuccess() {
+        set({ success: null });
       },
     }),
     {

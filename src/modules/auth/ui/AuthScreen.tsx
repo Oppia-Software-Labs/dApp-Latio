@@ -1,21 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "../hooks/useAuth";
-import { Wallet, Key, User, ArrowRight, Loader2 } from "lucide-react";
+import { Wallet, Key, User, ArrowRight, Loader2, CheckCircle } from "lucide-react";
 
 export function AuthScreen() {
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState("");
-  const { connect, register, isLoading, error, clearError } = useAuth();
+  const { connect, register, isLoading, error, success, clearError, clearSuccess } = useAuth();
+
+  // Limpiar mensajes cuando cambia el modo
+  useEffect(() => {
+    clearError();
+    clearSuccess();
+  }, [isRegister, clearError, clearSuccess]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
+    clearSuccess();
     
     try {
       if (isRegister) {
@@ -32,7 +39,7 @@ export function AuthScreen() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
@@ -96,6 +103,18 @@ export function AuthScreen() {
             </div>
           )}
 
+          {success && (
+            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <p className="text-sm text-green-600">{success}</p>
+              </div>
+              <p className="text-xs text-green-500 mt-1">
+                Redirigiendo al dashboard...
+              </p>
+            </div>
+          )}
+
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
               {isRegister ? "¿Ya tienes una wallet?" : "¿No tienes una wallet?"}
@@ -105,6 +124,7 @@ export function AuthScreen() {
                 onClick={() => {
                   setIsRegister(!isRegister);
                   clearError();
+                  clearSuccess();
                 }}
               >
                 {isRegister ? "Conectar existente" : "Crear nueva"}
