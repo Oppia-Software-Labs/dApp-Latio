@@ -6,16 +6,20 @@ import { TransactionsList } from "./components/TransactionsList";
 import { TripsList } from "./components/TripsList";
 import { StatsGrid } from "./components/StatsGrid";
 import { ExchangeRates } from "./components/ExchangeRates";
-import { 
-  mockBalance, 
-  mockTransactions, 
-  mockTrips, 
-  mockExchangeRates, 
-  mockStats, 
-  mockQuickActions 
+import { SendModal } from "./components/SendModal";
+import { useSendStore } from "../state/send.store";
+import {
+  mockBalance,
+  mockTransactions,
+  mockTrips,
+  mockExchangeRates,
+  mockStats,
+  mockQuickActions,
 } from "../data/mock-data";
 
 export function DashboardScreen() {
+  const { openModal } = useSendStore();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -23,11 +27,15 @@ export function DashboardScreen() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600">Welcome back! Here&apos;s your financial overview.</p>
+            <p className="text-gray-600">
+              Welcome back! Here&apos;s your financial overview.
+            </p>
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-500">Last updated</p>
-            <p className="text-sm font-medium">{new Date().toLocaleTimeString()}</p>
+            <p className="text-sm font-medium">
+              {new Date().toLocaleTimeString()}
+            </p>
           </div>
         </div>
 
@@ -61,6 +69,9 @@ export function DashboardScreen() {
           </p>
         </div>
       </div>
+
+      {/* Send Modal */}
+      <SendModal />
     </div>
   );
 }

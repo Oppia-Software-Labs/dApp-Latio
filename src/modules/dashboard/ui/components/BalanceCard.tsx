@@ -4,12 +4,15 @@ import { Balance } from "../../types/dashboard.types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, Download, TrendingUp } from "lucide-react";
+import { useSendStore } from "../../state/send.store";
 
 interface BalanceCardProps {
   balance: Balance;
 }
 
 export function BalanceCard({ balance }: BalanceCardProps) {
+  const { openModal } = useSendStore();
+
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -61,7 +64,10 @@ export function BalanceCard({ balance }: BalanceCardProps) {
 
         {/* Action Buttons */}
         <div className="flex gap-2 pt-2">
-          <Button className="flex-1 bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600">
+          <Button 
+            onClick={openModal}
+            className="flex-1 bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600"
+          >
             <Send className="w-4 h-4 mr-2" />
             Send
           </Button>

@@ -3,6 +3,7 @@
 import { QuickAction } from "../../types/dashboard.types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, ArrowLeftRight, CreditCard, MapPin, QrCode, Wallet } from "lucide-react";
+import { useSendStore } from "../../state/send.store";
 
 interface QuickActionsProps {
   actions: QuickAction[];
@@ -25,6 +26,16 @@ const colorClasses = {
 };
 
 export function QuickActions({ actions }: QuickActionsProps) {
+  const { openModal } = useSendStore();
+
+  const handleAction = (action: QuickAction) => {
+    if (action.id === "send") {
+      openModal();
+    } else {
+      action.action();
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -37,7 +48,7 @@ export function QuickActions({ actions }: QuickActionsProps) {
             return (
               <button
                 key={action.id}
-                onClick={action.action}
+                onClick={() => handleAction(action)}
                 className={`${colorClasses[action.color]} text-white rounded-lg p-4 transition-all duration-200 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
                 aria-label={action.title}
               >
