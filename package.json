@@ -12,6 +12,7 @@
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@stellar/stellar-sdk": "^14.0.0-rc.3",
+    "@tailwindcss/typography": "^0.5.16",
     "base64url": "^3.0.1",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.1",
@@ -23,6 +24,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.7"
   },
   "devDependencies": {

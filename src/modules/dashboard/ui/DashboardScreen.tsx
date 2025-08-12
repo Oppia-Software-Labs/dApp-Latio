@@ -1,27 +1,37 @@
 "use client";
+import LatioCard from "@/components/ui/latio-card";
+import { Button } from "@/components/ui/button";
 
 export function DashboardScreen() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Dashboard Coming Soon
-        </h1>
-        <p className="text-gray-600 mb-8">
-          The dashboard module is under development. This will include wallet management, 
-          transaction history, and currency exchange features.
-        </p>
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-lg font-semibold mb-4">Planned Features</h2>
-          <ul className="text-left space-y-2 text-gray-600">
-            <li>• Multi-currency wallet management</li>
-            <li>• Real-time exchange rates</li>
-            <li>• Transaction history and analytics</li>
-            <li>• Cross-border payment tools</li>
-            <li>• Business integration dashboard</li>
-          </ul>
+    <div className="grid gap-6 md:grid-cols-2">
+      <LatioCard>
+        <div className="p-6">
+          <h3 className="card-heading">Wallet Balance</h3>
+          <p className="card-subheading">XLM • Converted to local</p>
+          <div className="mt-4 flex items-end justify-between">
+            <div>
+              <div className="text-3xl font-semibold">1,245.90 XLM</div>
+              <div className="text-muted-foreground">≈ $132.12 USD</div>
+            </div>
+            <Button className="latio-gradient">Send</Button>
+          </div>
         </div>
-      </div>
+      </LatioCard>
+
+      <LatioCard>
+        <div className="p-6">
+          <h3 className="card-heading">Travel Plan</h3>
+          <p className="card-subheading">Budget • Dates • Destination</p>
+          <div className="mt-4 flex items-center justify-between">
+            <div>
+              <div className="font-medium">San José, Costa Rica</div>
+              <div className="text-sm text-muted-foreground">Aug 14 — Aug 20</div>
+            </div>
+            <Button variant="outline">View</Button>
+          </div>
+        </div>
+      </LatioCard>
     </div>
   );
 }
