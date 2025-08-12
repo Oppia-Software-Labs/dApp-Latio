@@ -9,14 +9,18 @@ export const metadata: Metadata = {
   description: "Next-gen Stellar cross-border payments",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider defaultTheme="dark">
           <Navbar />
           {children}
-          <Toaster 
+          <Toaster
             position="top-right"
             richColors
             closeButton

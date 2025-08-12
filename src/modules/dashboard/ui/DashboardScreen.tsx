@@ -1,37 +1,66 @@
 "use client";
-import LatioCard from "@/components/ui/latio-card";
-import { Button } from "@/components/ui/button";
+
+import { BalanceCard } from "./components/BalanceCard";
+import { QuickActions } from "./components/QuickActions";
+import { TransactionsList } from "./components/TransactionsList";
+import { TripsList } from "./components/TripsList";
+import { StatsGrid } from "./components/StatsGrid";
+import { ExchangeRates } from "./components/ExchangeRates";
+import { 
+  mockBalance, 
+  mockTransactions, 
+  mockTrips, 
+  mockExchangeRates, 
+  mockStats, 
+  mockQuickActions 
+} from "../data/mock-data";
 
 export function DashboardScreen() {
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      <LatioCard>
-        <div className="p-6">
-          <h3 className="card-heading">Wallet Balance</h3>
-          <p className="card-subheading">XLM • Converted to local</p>
-          <div className="mt-4 flex items-end justify-between">
-            <div>
-              <div className="text-3xl font-semibold">1,245.90 XLM</div>
-              <div className="text-muted-foreground">≈ $132.12 USD</div>
-            </div>
-            <Button className="latio-gradient">Send</Button>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-600">Welcome back! Here&apos;s your financial overview.</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-gray-500">Last updated</p>
+            <p className="text-sm font-medium">{new Date().toLocaleTimeString()}</p>
           </div>
         </div>
-      </LatioCard>
 
-      <LatioCard>
-        <div className="p-6">
-          <h3 className="card-heading">Travel Plan</h3>
-          <p className="card-subheading">Budget • Dates • Destination</p>
-          <div className="mt-4 flex items-center justify-between">
-            <div>
-              <div className="font-medium">San José, Costa Rica</div>
-              <div className="text-sm text-muted-foreground">Aug 14 — Aug 20</div>
-            </div>
-            <Button variant="outline">View</Button>
+        {/* Stats Grid */}
+        <StatsGrid stats={mockStats} exchangeRates={mockExchangeRates} />
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Balance & Quick Actions */}
+          <div className="space-y-6">
+            <BalanceCard balance={mockBalance} />
+            <QuickActions actions={mockQuickActions} />
+          </div>
+
+          {/* Center Column - Transactions */}
+          <div className="lg:col-span-2">
+            <TransactionsList transactions={mockTransactions} />
           </div>
         </div>
-      </LatioCard>
+
+        {/* Bottom Row - Trips & Exchange Rates */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <TripsList trips={mockTrips} />
+          <ExchangeRates exchangeRates={mockExchangeRates} />
+        </div>
+
+        {/* Footer Info */}
+        <div className="text-center py-8">
+          <p className="text-sm text-gray-500">
+            Powered by Stellar • Secure with Passkey • Real-time updates
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
