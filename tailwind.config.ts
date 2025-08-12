@@ -1,7 +1,9 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 const config: Config = {
-  darkMode: "class",
+  darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -12,7 +14,9 @@ const config: Config = {
     container: {
       center: true,
       padding: "2rem",
-      screens: { "2xl": "1400px" },
+      screens: {
+        "2xl": "1400px",
+      },
     },
     extend: {
       colors: {
@@ -49,14 +53,6 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Tokens Latio
-        "latio-blue": "#2563EB", // azul
-        "latio-green": "#10B981", // verde
-        latio: {
-          blue: "#0EA5E9", // opcional adicional
-          green: "#7E69AB",
-          white: "#FFFFFF",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -89,6 +85,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [tailwindcssAnimate, typography],
 };
+
 export default config;
