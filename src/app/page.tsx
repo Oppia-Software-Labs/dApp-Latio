@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { LandingScreen } from "@/modules/marketing/ui/LandingScreen";
 
 export default function Page() {
-  redirect("/");
+  return <LandingScreen />;
 }
