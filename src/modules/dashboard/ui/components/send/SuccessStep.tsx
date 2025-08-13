@@ -15,55 +15,66 @@ export function SuccessStep() {
 
   const handleViewOnExplorer = () => {
     // Mock explorer URL
-    window.open("https://stellar.expert/explorer/public/tx/txn_example", "_blank");
+    window.open(
+      "https://stellar.expert/explorer/public/tx/txn_example",
+      "_blank"
+    );
   };
 
   return (
     <div className="text-center space-y-6 py-4">
       {/* Success Icon */}
       <div className="flex justify-center">
-        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-          <CheckCircle className="w-8 h-8 text-green-600" />
+        <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+          <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
         </div>
       </div>
 
       {/* Success Message */}
       <div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+        <h3 className="text-xl font-semibold text-foreground mb-2">
           Transaction Sent Successfully!
         </h3>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Your payment has been processed and is now on the Stellar network.
         </p>
       </div>
 
       {/* Transaction Details */}
       {recipient && amount && (
-        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+        <div className="bg-muted/30 rounded-lg p-4 space-y-3">
           <div className="flex items-center justify-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <span className="text-sm font-semibold text-blue-600">
+            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+              <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
                 {recipient.avatar}
               </span>
             </div>
             <div className="text-left">
-              <p className="font-medium text-sm">{recipient.name}</p>
-              <p className="text-xs text-gray-500">{recipient.address}</p>
+              <p className="font-medium text-sm text-foreground">
+                {recipient.name}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {recipient.address}
+              </p>
             </div>
           </div>
-          
+
           <div className="border-t pt-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Amount Sent:</span>
-              <span className="font-semibold">
+              <span className="text-sm text-muted-foreground">
+                Amount Sent:
+              </span>
+              <span className="font-semibold text-foreground">
                 {amount.amount} {amount.currency}
               </span>
             </div>
-            <div className="flex justify-between items-center text-sm text-gray-500">
+            <div className="flex justify-between items-center text-sm text-muted-foreground">
               <span>Network Fee:</span>
-              <span>{amount.fee} {amount.currency}</span>
+              <span>
+                {amount.fee} {amount.currency}
+              </span>
             </div>
-            <div className="flex justify-between items-center text-xs text-gray-400">
+            <div className="flex justify-between items-center text-xs text-muted-foreground/70">
               <span>Transaction ID:</span>
               <span>txn_example123</span>
             </div>
@@ -91,7 +102,7 @@ export function SuccessStep() {
             View on Explorer
           </Button>
         </div>
-        
+
         <Button
           onClick={closeModal}
           className="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600"
@@ -102,7 +113,7 @@ export function SuccessStep() {
       </div>
 
       {/* Additional Info */}
-      <div className="text-xs text-gray-500 space-y-1">
+      <div className="text-xs text-muted-foreground space-y-1">
         <p>• Transaction will appear in your history within 5 seconds</p>
         <p>• You can track this transaction on the Stellar network</p>
         <p>• Recipient will receive the funds instantly</p>

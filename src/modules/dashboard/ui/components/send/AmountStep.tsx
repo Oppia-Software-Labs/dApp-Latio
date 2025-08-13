@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSendStore } from "../../../state/send.store";
-import { mockCurrencies, calculateFee, calculateXlmEquivalent, calculateTotal } from "../../../data/send-mock-data";
+import {
+  mockCurrencies,
+  calculateFee,
+  calculateXlmEquivalent,
+  calculateTotal,
+} from "../../../data/send-mock-data";
 import { SendAmount } from "../../../types/send.types";
 import { ArrowLeft, DollarSign, Calculator } from "lucide-react";
 
@@ -16,7 +21,10 @@ export function AmountStep() {
   const [description, setDescriptionValue] = useState("");
 
   const fee = calculateFee(selectedCurrency.code, parseFloat(amount) || 0);
-  const xlmEquivalent = calculateXlmEquivalent(parseFloat(amount) || 0, selectedCurrency.code);
+  const xlmEquivalent = calculateXlmEquivalent(
+    parseFloat(amount) || 0,
+    selectedCurrency.code
+  );
   const total = calculateTotal(parseFloat(amount) || 0, fee);
 
   const handleContinue = () => {
@@ -37,24 +45,27 @@ export function AmountStep() {
   };
 
   const handleBack = () => {
-    setStep('recipient');
+    setStep("recipient");
   };
 
-  const isAmountValid = parseFloat(amount) > 0 && parseFloat(amount) <= selectedCurrency.balance;
+  const isAmountValid =
+    parseFloat(amount) > 0 && parseFloat(amount) <= selectedCurrency.balance;
 
   return (
     <div className="space-y-4">
       {/* Recipient Info */}
       {recipient && (
-        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-            <span className="text-sm font-semibold text-blue-600">
+        <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+          <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
               {recipient.avatar}
             </span>
           </div>
           <div>
-            <p className="font-medium text-sm">{recipient.name}</p>
-            <p className="text-xs text-gray-500">{recipient.address}</p>
+            <p className="font-medium text-sm text-foreground">
+              {recipient.name}
+            </p>
+            <p className="text-xs text-muted-foreground">{recipient.address}</p>
           </div>
         </div>
       )}
@@ -69,13 +80,17 @@ export function AmountStep() {
               onClick={() => setSelectedCurrency(currency)}
               className={`p-3 rounded-lg border text-center transition-colors ${
                 selectedCurrency.code === currency.code
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200 hover:bg-gray-50"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-950"
+                  : "border-border hover:bg-muted/50"
               }`}
             >
-              <div className="text-sm font-medium">{currency.symbol}</div>
-              <div className="text-xs text-gray-500">{currency.code}</div>
-              <div className="text-xs text-gray-400">
+              <div className="text-sm font-medium text-foreground">
+                {currency.symbol}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {currency.code}
+              </div>
+              <div className="text-xs text-muted-foreground/70">
                 {currency.balance.toLocaleString()}
               </div>
             </button>
@@ -87,7 +102,7 @@ export function AmountStep() {
       <div>
         <Label className="text-sm font-medium">Amount</Label>
         <div className="relative mt-2">
-          <DollarSign className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             type="number"
             placeholder="0.00"
@@ -99,8 +114,9 @@ export function AmountStep() {
             max={selectedCurrency.balance}
           />
         </div>
-        <p className="text-xs text-gray-500 mt-1">
-          Available: {selectedCurrency.balance.toLocaleString()} {selectedCurrency.code}
+        <p className="text-xs text-muted-foreground mt-1">
+          Available: {selectedCurrency.balance.toLocaleString()}{" "}
+          {selectedCurrency.code}
         </p>
       </div>
 
@@ -116,25 +132,33 @@ export function AmountStep() {
       </div>
 
       {/* Fee Breakdown */}
-      <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+      <div className="bg-muted/30 rounded-lg p-3 space-y-2">
         <div className="flex items-center gap-2">
-          <Calculator className="w-4 h-4 text-gray-500" />
-          <span className="text-sm font-medium">Fee Breakdown</span>
+          <Calculator className="w-4 h-4 text-muted-foreground" />
+          <span className="text-sm font-medium text-foreground">
+            Fee Breakdown
+          </span>
         </div>
         <div className="space-y-1 text-sm">
           <div className="flex justify-between">
-            <span className="text-gray-600">Amount:</span>
-            <span>{parseFloat(amount) || 0} {selectedCurrency.code}</span>
+            <span className="text-muted-foreground">Amount:</span>
+            <span className="text-foreground">
+              {parseFloat(amount) || 0} {selectedCurrency.code}
+            </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Network Fee:</span>
-            <span>{fee} {selectedCurrency.code}</span>
+            <span className="text-muted-foreground">Network Fee:</span>
+            <span className="text-foreground">
+              {fee} {selectedCurrency.code}
+            </span>
           </div>
           <div className="flex justify-between font-medium border-t pt-1">
-            <span>Total:</span>
-            <span>{total.toFixed(2)} {selectedCurrency.code}</span>
+            <span className="text-foreground">Total:</span>
+            <span className="text-foreground">
+              {total.toFixed(2)} {selectedCurrency.code}
+            </span>
           </div>
-          <div className="flex justify-between text-xs text-gray-500">
+          <div className="flex justify-between text-xs text-muted-foreground">
             <span>≈ {xlmEquivalent.toFixed(4)} XLM</span>
           </div>
         </div>
@@ -142,11 +166,7 @@ export function AmountStep() {
 
       {/* Action Buttons */}
       <div className="flex gap-2 pt-4">
-        <Button
-          variant="outline"
-          onClick={handleBack}
-          className="flex-1"
-        >
+        <Button variant="outline" onClick={handleBack} className="flex-1">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>

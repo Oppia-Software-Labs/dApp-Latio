@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,14 +11,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
-import { 
-  User, 
-  Settings, 
-  LogOut, 
-  Wallet, 
+import {
+  User,
+  Settings,
+  LogOut,
+  Wallet,
   ChevronDown,
   Shield,
-  HelpCircle
+  HelpCircle,
 } from "lucide-react";
 
 interface UserMenuProps {
@@ -39,12 +40,14 @@ export function UserMenu({ variant = "default" }: UserMenuProps) {
             <p className="text-xs text-muted-foreground">usuario@latio.com</p>
           </div>
         </div>
-        
+
         <div className="space-y-1">
-          <Button variant="ghost" className="w-full justify-start">
-            <Wallet className="mr-2 h-4 w-4" />
-            Mi Wallet
-          </Button>
+          <Link href="/wallet">
+            <Button variant="ghost" className="w-full justify-start">
+              <Wallet className="mr-2 h-4 w-4" />
+              Mi Wallet
+            </Button>
+          </Link>
           <Button variant="ghost" className="w-full justify-start">
             <Settings className="mr-2 h-4 w-4" />
             Configuración
@@ -58,10 +61,10 @@ export function UserMenu({ variant = "default" }: UserMenuProps) {
             Ayuda
           </Button>
         </div>
-        
+
         <div className="pt-2 border-t">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
             onClick={disconnect}
           >
@@ -94,10 +97,12 @@ export function UserMenu({ variant = "default" }: UserMenuProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Wallet className="mr-2 h-4 w-4" />
-          <span>Mi Wallet</span>
-        </DropdownMenuItem>
+        <Link href="/wallet">
+          <DropdownMenuItem>
+            <Wallet className="mr-2 h-4 w-4" />
+            <span>Mi Wallet</span>
+          </DropdownMenuItem>
+        </Link>
         <DropdownMenuItem>
           <Settings className="mr-2 h-4 w-4" />
           <span>Configuración</span>
@@ -111,7 +116,7 @@ export function UserMenu({ variant = "default" }: UserMenuProps) {
           <span>Ayuda</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={disconnect}
           className="text-red-600 focus:text-red-600"
         >
