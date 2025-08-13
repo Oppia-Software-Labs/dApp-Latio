@@ -9,7 +9,6 @@ import {
   Sun, 
   Moon, 
   Wallet, 
-  Send, 
   Menu,
   X
 } from "lucide-react";
@@ -53,13 +52,7 @@ export function Navbar() {
 
           {/* User actions */}
           {isAuthenticated ? (
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                <Send className="w-4 h-4 mr-2" />
-                Send
-              </Button>
-              <UserMenu />
-            </div>
+            <UserMenu />
           ) : (
             <Link href="/login">
               <Button size="sm">
@@ -86,13 +79,7 @@ export function Navbar() {
         <div className="md:hidden border-t bg-background">
           <div className="container py-4 space-y-4">
             {isAuthenticated && (
-              <div className="space-y-4">
-                <Button variant="outline" className="w-full justify-start">
-                  <Send className="w-4 h-4 mr-2" />
-                  Send Money
-                </Button>
-                <UserMenu variant="mobile" />
-              </div>
+              <UserMenu variant="mobile" />
             )}
           </div>
         </div>
