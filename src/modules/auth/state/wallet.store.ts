@@ -40,6 +40,11 @@ export const useWalletStore = create<State & Actions>()(
             description: "Ya puedes acceder a todas las funciones de Latio",
             duration: 4000,
           });
+
+          // Redirigir al dashboard después del login exitoso
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 1000);
         } catch (e: unknown) {
           const errorMessage = e instanceof Error ? e.message : "Error al conectar wallet";
           set({ 
@@ -69,6 +74,11 @@ export const useWalletStore = create<State & Actions>()(
             description: "Tu wallet está lista para usar",
             duration: 4000,
           });
+
+          // Redirigir al dashboard después del registro exitoso
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 1000);
         } catch (e: unknown) {
           const errorMessage = e instanceof Error ? e.message : "Error al crear wallet";
           set({ 
@@ -89,6 +99,11 @@ export const useWalletStore = create<State & Actions>()(
           description: "Has cerrado sesión exitosamente",
           duration: 3000,
         });
+        
+        // Redirigir al login después de desconectar
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 1000);
       },
 
       clearError() {
