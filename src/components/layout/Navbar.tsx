@@ -48,12 +48,6 @@ export function Navbar() {
             <LayoutDashboard className="w-4 h-4" />
             Dashboard
           </Link>
-          <Link
-            href="/stellar-addresses"
-            className="text-sm font-medium transition-colors hover:text-primary"
-          >
-            Stellar Addresses
-          </Link>
         </nav>
 
         {/* Right side actions */}
@@ -113,13 +107,6 @@ export function Navbar() {
               >
                 <LayoutDashboard className="w-4 h-4" />
                 Dashboard
-              </Link>
-              <Link
-                href="/stellar-addresses"
-                className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Stellar Addresses
               </Link>
             </nav>
             
