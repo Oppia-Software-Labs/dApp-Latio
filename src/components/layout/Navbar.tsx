@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
+import { UserMenu } from "./UserMenu";
 import { 
   Sun, 
   Moon, 
@@ -16,7 +17,7 @@ import { useState } from "react";
 
 export function Navbar() {
   const { theme, setTheme } = useTheme();
-  const { isAuthenticated, disconnect } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -57,10 +58,7 @@ export function Navbar() {
                 <Send className="w-4 h-4 mr-2" />
                 Send
               </Button>
-              <Button variant="outline" size="sm" onClick={disconnect}>
-                <Wallet className="w-4 h-4 mr-2" />
-                Disconnect
-              </Button>
+              <UserMenu />
             </div>
           ) : (
             <Link href="/login">
@@ -88,15 +86,12 @@ export function Navbar() {
         <div className="md:hidden border-t bg-background">
           <div className="container py-4 space-y-4">
             {isAuthenticated && (
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Button variant="outline" className="w-full justify-start">
                   <Send className="w-4 h-4 mr-2" />
                   Send Money
                 </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={disconnect}>
-                  <Wallet className="w-4 h-4 mr-2" />
-                  Disconnect
-                </Button>
+                <UserMenu variant="mobile" />
               </div>
             )}
           </div>
