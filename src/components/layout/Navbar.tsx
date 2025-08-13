@@ -8,7 +8,6 @@ import {
   Sun, 
   Moon, 
   Wallet, 
-  LayoutDashboard, 
   Send, 
   Menu,
   X
@@ -38,17 +37,6 @@ export function Navbar() {
             Latio
           </span>
         </Link>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link
-            href="/dashboard"
-            className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-2"
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            Dashboard
-          </Link>
-        </nav>
 
         {/* Right side actions */}
         <div className="flex items-center space-x-2">
@@ -99,19 +87,8 @@ export function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t bg-background">
           <div className="container py-4 space-y-4">
-            <nav className="flex flex-col space-y-2">
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <LayoutDashboard className="w-4 h-4" />
-                Dashboard
-              </Link>
-            </nav>
-            
             {isAuthenticated && (
-              <div className="pt-4 border-t space-y-2">
+              <div className="space-y-2">
                 <Button variant="outline" className="w-full justify-start">
                   <Send className="w-4 h-4 mr-2" />
                   Send Money

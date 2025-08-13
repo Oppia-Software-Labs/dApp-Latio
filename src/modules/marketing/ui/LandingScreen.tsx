@@ -9,7 +9,7 @@ import { Footer } from "./sections/Footer";
 
 export function LandingScreen() {
   return (
-    <main className="pt-16 xs:pt-20 sm:pt-24">
+    <main className="">
       <Hero />
       <LogoCloud />
       <Features />

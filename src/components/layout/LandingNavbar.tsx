@@ -35,20 +35,13 @@ export function LandingNavbar() {
             {theme === "dark" ? <Sun size={18}/> : <Moon size={18}/>}
           </Button>
 
-          {/* Auth buttons */}
-          <div className="flex items-center space-x-2">
-            <Link href="/login">
-              <Button variant="ghost" size="sm">
-                Login
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600">
-                <Wallet className="w-4 h-4 mr-2" />
-                Get Started
-              </Button>
-            </Link>
-          </div>
+          {/* Connect button */}
+          <Link href="/login">
+            <Button size="sm" className="bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600">
+              <Wallet className="w-4 h-4 mr-2" />
+              Connect
+            </Button>
+          </Link>
         </div>
       </div>
     </header>
