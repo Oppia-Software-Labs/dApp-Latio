@@ -21,19 +21,19 @@ export function DashboardScreen() {
   const { openModal } = useSendStore();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600">
+            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+            <p className="text-muted-foreground">
               Welcome back! Here&apos;s your financial overview.
             </p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-500">Last updated</p>
-            <p className="text-sm font-medium">
+            <p className="text-sm text-muted-foreground">Last updated</p>
+            <p className="text-sm font-medium text-foreground">
               {new Date().toLocaleTimeString()}
             </p>
           </div>
@@ -64,7 +64,7 @@ export function DashboardScreen() {
 
         {/* Footer Info */}
         <div className="text-center py-8">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Powered by Stellar • Secure with Passkey • Real-time updates
           </p>
         </div>

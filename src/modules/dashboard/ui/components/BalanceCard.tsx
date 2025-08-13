@@ -21,24 +21,24 @@ export function BalanceCard({ balance }: BalanceCardProps) {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-blue-50 to-green-50 border-0 shadow-lg">
+    <Card className="bg-card border-0 shadow-lg">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold text-gray-800">
+        <CardTitle className="text-lg font-semibold text-card-foreground">
           Wallet Balance
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* XLM Balance */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-background rounded-lg p-4 shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Stellar (XLM)</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm text-muted-foreground">Stellar (XLM)</p>
+              <p className="text-2xl font-bold text-foreground">
                 {balance.xlm.toLocaleString()} XLM
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-600">≈ {formatCurrency(balance.usd, 'USD')}</p>
+              <p className="text-sm text-muted-foreground">≈ {formatCurrency(balance.usd, 'USD')}</p>
               <div className="flex items-center text-green-600 text-sm">
                 <TrendingUp className="w-4 h-4 mr-1" />
                 +2.4%
@@ -48,16 +48,16 @@ export function BalanceCard({ balance }: BalanceCardProps) {
         </div>
 
         {/* Local Currency */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-background rounded-lg p-4 shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Local ({balance.localCurrency.currency})</p>
-              <p className="text-xl font-semibold text-gray-900">
+              <p className="text-sm text-muted-foreground">Local ({balance.localCurrency.currency})</p>
+              <p className="text-xl font-semibold text-foreground">
                 {balance.localCurrency.symbol}{balance.localCurrency.amount.toLocaleString()}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-600">≈ {formatCurrency(balance.usd, 'USD')}</p>
+              <p className="text-sm text-muted-foreground">≈ {formatCurrency(balance.usd, 'USD')}</p>
             </div>
           </div>
         </div>

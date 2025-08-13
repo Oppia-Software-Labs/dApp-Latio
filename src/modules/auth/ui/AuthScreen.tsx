@@ -4,7 +4,13 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useAuth } from "../hooks/useAuth";
 import { Wallet, Key, User, ArrowRight, Loader2 } from "lucide-react";
 
@@ -21,83 +27,86 @@ export function AuthScreen() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
-    
+
     try {
       if (isRegister) {
-        if (!name.trim()) {
-          throw new Error("El nombre es requerido");
-        }
-        await register(name.trim());
+        await register(name);
       } else {
         await connect();
       }
     } catch (err) {
-      console.error("Auth error:", err);
+      // Error handling is done in the store
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
+    <div className="w-full flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-green-500 flex items-center justify-center">
-              <Wallet className="w-6 h-6 text-white" />
-            </div>
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-green-500">
+            <Wallet className="h-6 w-6 text-white" />
           </div>
-          <CardTitle className="text-2xl font-bold text-center">
-            {isRegister ? "Crear Wallet" : "Conectar Wallet"}
+          <CardTitle className="text-2xl font-bold">
+            {isRegister ? "Create Wallet" : "Connect Wallet"}
           </CardTitle>
-          <CardDescription className="text-center">
-            {isRegister 
-              ? "Crea tu wallet con Passkey para empezar a usar Latio"
-              : "Conecta tu wallet existente con Passkey"
-            }
+          <CardDescription>
+            {isRegister
+              ? "Create a new wallet using your passkey"
+              : "Connect to your existing wallet"}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {isRegister && (
               <div className="space-y-2">
-                <Label htmlFor="name">Nombre de tu wallet</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Mi Wallet Latio"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="pl-10"
-                    disabled={isLoading}
-                  />
-                </div>
+                <Label htmlFor="name" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Wallet Name
+                </Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Enter wallet name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  disabled={isLoading}
+                />
               </div>
             )}
-            
-            <Button 
-              type="submit" 
+
+            <Button
+              type="submit"
               className="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600"
-              disabled={isLoading}
+              disabled={isLoading || (isRegister && !name.trim())}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isRegister ? "Creando wallet..." : "Conectando..."}
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  {isRegister ? "Creating..." : "Connecting..."}
                 </>
               ) : (
                 <>
-                  <Key className="mr-2 h-4 w-4" />
-                  {isRegister ? "Crear con Passkey" : "Conectar con Passkey"}
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {isRegister ? (
+                    <>
+                      <Key className="w-4 h-4 mr-2" />
+                      Create Wallet
+                    </>
+                  ) : (
+                    <>
+                      <Wallet className="w-4 h-4 mr-2" />
+                      Connect Wallet
+                    </>
+                  )}
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </>
               )}
             </Button>
           </form>
 
           {error && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-sm text-red-600">{error}</p>
+            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <p className="text-sm text-destructive">{error}</p>
             </div>
           )}
 
@@ -117,23 +126,12 @@ export function AuthScreen() {
             </p>
           </div>
 
-          <div className="mt-6 pt-6 border-t">
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground mb-2">
-                Seguridad garantizada con
-              </p>
-              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Key className="h-3 w-3" />
-                  <span>Passkey</span>
-                </div>
-                <span>•</span>
-                <div className="flex items-center gap-1">
-                  <Wallet className="h-3 w-3" />
-                  <span>Stellar</span>
-                </div>
-              </div>
-            </div>
+          {/* Security Notice */}
+          <div className="mt-6 p-3 bg-muted/50 rounded-lg">
+            <p className="text-xs text-muted-foreground text-center">
+              🔒 Your wallet is secured with passkey technology. No passwords
+              needed.
+            </p>
           </div>
         </CardContent>
       </Card>
