@@ -43,6 +43,7 @@ export const account = new PasskeyKit({
   networkPassphrase,
   walletWasmHash,
 });
+
 export const server = new PasskeyServer({
   rpcUrl,
   launchtubeUrl: ENV.LAUNCHTUBE_URL,
@@ -51,6 +52,50 @@ export const server = new PasskeyServer({
   mercuryUrl: ENV.MERCURY_URL,
   mercuryJwt: ENV.MERCURY_JWT,
 });
+
+// Store for current session credentials
+let currentSession: { keyId: string; contractId: string } | null = null;
+
+/**
+ * Configure account session with stored credentials
+ * @param keyId - The keyId from stored session
+ * @param contractId - The contractId from stored session
+ */
+export async function configureAccountSession(keyId: string, contractId: string) {
+  try {
+    console.log("Configuring account session with:", { keyId, contractId });
+    
+    // Store the current session
+    currentSession = { keyId, contractId };
+    
+    console.log("Account session configured successfully");
+    return true;
+  } catch (error) {
+    console.error("Error configuring account session:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get current session credentials
+ */
+export function getCurrentSession() {
+  return currentSession;
+}
+
+/**
+ * Check if account session is configured
+ */
+export function isAccountSessionConfigured(): boolean {
+  return currentSession !== null;
+}
+
+/**
+ * Clear current session
+ */
+export function clearAccountSession() {
+  currentSession = null;
+}
 
 export const sac = new SACClient({ rpcUrl, networkPassphrase });
 export const native = sac.getSACClient(ENV.NATIVE_CONTRACT_ID);

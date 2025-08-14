@@ -82,10 +82,17 @@ export const useSendStore = create<SendStore>((set, get) => ({
 
     try {
       // Import wallet service directly
-      const { walletService } = await import("../../wallet/services/wallet.service");
+      const { walletService } = await import(
+        "../../wallet/services/wallet.service"
+      );
 
       // Send real transaction
-      await walletService.sendXLM(recipient.address, amount.amount, keyId, contractId);
+      await walletService.sendXLM(
+        recipient.address,
+        amount.amount,
+        keyId,
+        contractId
+      );
 
       set({ step: "success" });
 

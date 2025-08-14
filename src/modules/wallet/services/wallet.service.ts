@@ -4,7 +4,13 @@ import {
   FundRequest,
   WalletTransaction,
 } from "../types/wallet.types";
-import { native, account, server } from "@/lib/passkey";
+import { 
+  native, 
+  account, 
+  server, 
+  configureAccountSession,
+  isAccountSessionConfigured 
+} from "@/lib/passkey";
 
 interface StellarBalance {
   asset_type: string;
@@ -183,6 +189,12 @@ export class WalletService {
 
     try {
       console.log(`Sending ${amount} XLM from ${contractId} to ${to}`);
+
+      // Configure account session if not already configured
+      if (!isAccountSessionConfigured()) {
+        console.log("Configuring account session before transaction");
+        await configureAccountSession(keyId, contractId);
+      }
 
       // Create transfer transaction
       const transfer = await native.transfer({
