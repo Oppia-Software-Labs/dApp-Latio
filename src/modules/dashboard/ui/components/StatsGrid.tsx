@@ -15,7 +15,7 @@ interface StatsGridProps {
   exchangeRates?: ExchangeRate[];
 }
 
-export function StatsGrid({ stats, exchangeRates }: StatsGridProps) {
+export function StatsGrid({ stats }: StatsGridProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',

@@ -2,7 +2,7 @@
 
 import { ExchangeRate } from "../../types/dashboard.types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 interface ExchangeRatesProps {
   exchangeRates: ExchangeRate[];

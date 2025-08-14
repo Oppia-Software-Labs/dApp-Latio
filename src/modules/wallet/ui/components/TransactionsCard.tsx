@@ -4,12 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock } from "lucide-react";
 
 interface TransactionsCardProps {
-  transactions: any[];
+  transactions: unknown[];
   isLoading: boolean;
 }
 
 export function TransactionsCard({
-  transactions,
   isLoading,
 }: TransactionsCardProps) {
 

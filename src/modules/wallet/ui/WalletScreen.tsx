@@ -10,7 +10,7 @@ import { TransactionsCard } from "./components/TransactionsCard";
 import { Loader2 } from "lucide-react";
 
 export function WalletScreen() {
-  const { keyId, contractId } = useAuth();
+  const { contractId } = useAuth();
   const {
     balance,
     walletInfo,

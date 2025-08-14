@@ -61,20 +61,20 @@ let currentSession: { keyId: string; contractId: string } | null = null;
  * @param keyId - The keyId from stored session
  * @param contractId - The contractId from stored session
  */
-export async function configureAccountSession(
-  keyId: string,
-  contractId: string
-) {
+            export async function configureAccountSession(
+              _keyId: string,
+              contractId: string
+            ) {
   try {
-    console.log("Configuring account session with:", { keyId, contractId });
+                    console.log("Configuring account session with:", { keyId: _keyId, contractId });
 
-    // Connect wallet with stored keyId
-    await account.connectWallet({
-      getContractId: async (keyId: string) => contractId,
-    });
+                // Connect wallet with stored keyId
+                await account.connectWallet({
+                  getContractId: async (keyId: string) => contractId,
+                });
 
-    // Store the current session
-    currentSession = { keyId, contractId };
+                // Store the current session
+                currentSession = { keyId: _keyId, contractId };
 
     console.log("Account session configured successfully");
     return true;

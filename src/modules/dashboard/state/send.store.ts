@@ -68,7 +68,7 @@ export const useSendStore = create<SendStore>((set, get) => ({
   },
 
   sendTransaction: async (keyId: string, contractId: string) => {
-    const { recipient, amount, description } = get();
+    const { recipient, amount } = get();
 
     if (!recipient || !amount) {
       set({ error: "Missing recipient or amount" });

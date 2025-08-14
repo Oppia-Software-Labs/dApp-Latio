@@ -19,7 +19,7 @@ interface Actions {
 
 export const useWalletStore = create<State & Actions>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       keyId: null,
       contractId: null,
       isLoading: false,

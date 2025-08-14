@@ -9,7 +9,6 @@ import { StatsGrid } from "./components/StatsGrid";
 import { ExchangeRates } from "./components/ExchangeRates";
 import { SendModal } from "./components/SendModal";
 import { ReceiveModal } from "./components/ReceiveModal";
-import { useSendStore } from "../state/send.store";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { useWalletStore } from "@/modules/wallet/state/wallet.store";
 import {

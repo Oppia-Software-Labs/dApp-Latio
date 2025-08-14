@@ -4,14 +4,14 @@ import { WalletInfo } from "../../types/wallet.types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { StellarAddress } from "@/components/ui/stellar-address";
-import { Copy, ExternalLink, Wallet, CheckCircle } from "lucide-react";
+import { Copy, ExternalLink, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
 interface WalletInfoCardProps {
   walletInfo: WalletInfo | null;
 }
 
-export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
+export function WalletInfoCard({}: WalletInfoCardProps) {
   const { contractId } = useAuth();
 
   const handleCopyAddress = () => {
@@ -108,8 +108,7 @@ export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
                 Smart Wallet
               </p>
               <p className="text-blue-700 dark:text-blue-300 mt-1">
-                This is a Soroban smart contract wallet secured by your
-                passkey.
+                This is a Soroban smart contract wallet secured by your passkey.
               </p>
             </div>
           </div>

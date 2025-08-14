@@ -12,17 +12,7 @@ import {
   isAccountSessionConfigured,
 } from "@/lib/passkey";
 
-interface StellarBalance {
-  asset_type: string;
-  balance: string;
-}
 
-interface StellarTransaction {
-  hash: string;
-  type: string;
-  amount: string;
-  created_at: string;
-}
 
 export class WalletService {
   private static instance: WalletService;
@@ -131,10 +121,9 @@ export class WalletService {
   /**
    * Request testnet funds using API route
    */
-  async requestTestnetFunds(
-    contractId: string,
-    amount: number = 10000
-  ): Promise<FundRequest> {
+                async requestTestnetFunds(
+                contractId: string
+              ): Promise<FundRequest> {
     if (!contractId || contractId.trim() === "") {
       throw new Error("Invalid contract ID: contractId is empty or undefined");
     }

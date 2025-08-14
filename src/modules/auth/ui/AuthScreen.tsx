@@ -34,7 +34,7 @@ export function AuthScreen() {
       } else {
         await connect();
       }
-    } catch (err) {
+    } catch {
       // Error handling is done in the store
     }
   };

@@ -43,39 +43,7 @@ const statusConfig = {
   },
 };
 
-export function TransactionsList({ transactions }: TransactionsListProps) {
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency,
-    }).format(amount);
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  };
-
-  const getTransactionIcon = (type: Transaction["type"]) => {
-    const IconComponent = typeIcons[type];
-    return <IconComponent className="w-4 h-4" />;
-  };
-
-  const getStatusBadge = (status: Transaction["status"]) => {
-    const config = statusConfig[status];
-    const IconComponent = config.icon;
-
-    return (
-      <Badge className={`${config.color} flex items-center gap-1 text-xs`}>
-        <IconComponent className="w-3 h-3" />
-        {config.text}
-      </Badge>
-    );
-  };
+export function TransactionsList({}: TransactionsListProps) {
 
   return (
     <Card>

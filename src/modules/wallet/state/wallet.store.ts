@@ -95,8 +95,7 @@ export const useWalletStore = create<WalletState & WalletActions>(
       set({ isLoading: true, error: null });
       try {
         const fundRequest = await walletService.requestTestnetFunds(
-          contractId,
-          amount
+          contractId
         );
         set({ fundRequest, isLoading: false });
 
@@ -132,7 +131,7 @@ export const useWalletStore = create<WalletState & WalletActions>(
     ) {
       set({ isLoading: true, error: null });
       try {
-        const result = await walletService.sendXLM(
+        await walletService.sendXLM(
           to,
           amount,
           keyId,
