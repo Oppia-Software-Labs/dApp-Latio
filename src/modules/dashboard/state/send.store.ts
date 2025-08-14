@@ -97,9 +97,9 @@ export const useSendStore = create<SendStore>((set, get) => ({
       );
 
       // Store transaction hash for success step
-      set({ 
+      set({
         step: "success",
-        transactionHash: result.hash 
+        transactionHash: result.hash,
       });
 
       // Close modal after 10 seconds

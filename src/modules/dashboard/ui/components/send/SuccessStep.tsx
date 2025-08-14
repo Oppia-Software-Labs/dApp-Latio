@@ -18,7 +18,7 @@ export function SuccessStep() {
     if (transactionHash) {
       // Use Stellar Lab explorer for testnet
       window.open(
-        `https://laboratory.stellar.org/#explorer?resource=transactions&values=${transactionHash}`,
+        `https://stellar.expert/explorer/testnet/tx/${transactionHash}`,
         "_blank"
       );
     }
