@@ -1,19 +1,17 @@
 import { create } from "zustand";
-import { WalletBalance, WalletInfo, FundRequest } from "../types/wallet.types";
+import {
+  WalletBalance,
+  WalletInfo,
+  FundRequest,
+  WalletTransaction,
+} from "../types/wallet.types";
 import { walletService } from "../services/wallet.service";
 import { toast } from "sonner";
-
-interface StellarTransaction {
-  hash: string;
-  type: string;
-  amount: string;
-  created_at: string;
-}
 
 interface WalletState {
   balance: WalletBalance | null;
   walletInfo: WalletInfo | null;
-  transactions: StellarTransaction[];
+  transactions: WalletTransaction[];
   isLoading: boolean;
   error: string | null;
   fundRequest: FundRequest | null;
