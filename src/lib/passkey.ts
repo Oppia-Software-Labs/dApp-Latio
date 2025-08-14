@@ -73,7 +73,7 @@ export async function configureAccountSession(
 
     // Connect wallet with stored keyId
     await account.connectWallet({
-      getContractId: async (keyId: string) => contractId,
+      keyId: _keyId,
     });
 
     // Store the current session
