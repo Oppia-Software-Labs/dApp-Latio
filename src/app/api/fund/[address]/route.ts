@@ -20,7 +20,7 @@ export async function GET(
 
     console.log("ENV.FUNDER_SECRET_KEY", ENV.FUNDER_SECRET_KEY);
     console.log("ENV.FUNDER_SECRET_KEY length:", ENV.FUNDER_SECRET_KEY?.length);
-    
+
     // Create funder keypair from environment variable
     if (!ENV.FUNDER_SECRET_KEY) {
       throw new Error("FUNDER_SECRET_KEY environment variable is not set");
@@ -29,8 +29,11 @@ export async function GET(
     const fundKeypair = Keypair.fromSecret(ENV.FUNDER_SECRET_KEY);
     console.log("fundKeypair created successfully");
     console.log("fundKeypair.publicKey():", fundKeypair.publicKey());
-    console.log("fundKeypair.publicKey() type:", typeof fundKeypair.publicKey());
-    
+    console.log(
+      "fundKeypair.publicKey() type:",
+      typeof fundKeypair.publicKey()
+    );
+
     const fundSigner = basicNodeSigner(fundKeypair, ENV.NETWORK_PASSPHRASE);
     console.log("fundSigner created:", !!fundSigner);
     console.log("ENV.NETWORK_PASSPHRASE:", ENV.NETWORK_PASSPHRASE);
@@ -43,7 +46,7 @@ export async function GET(
     console.log("- from:", fundKeypair.publicKey());
     console.log("- to:", address);
     console.log("- amount:", BigInt(25 * 10_000_000));
-    
+
     const { built, ...transfer } = await native.transfer({
       from: fundKeypair.publicKey(),
       to: address,
@@ -56,10 +59,17 @@ export async function GET(
 
     // Sign the transaction
     console.log("About to sign auth entries...");
-    console.log("transfer.signAuthEntries exists:", typeof transfer.signAuthEntries);
-    console.log("fundSigner.signAuthEntry exists:", typeof fundSigner.signAuthEntry);
-    
+    console.log(
+      "transfer.signAuthEntries exists:",
+      typeof transfer.signAuthEntries
+    );
+    console.log(
+      "fundSigner.signAuthEntry exists:",
+      typeof fundSigner.signAuthEntry
+    );
+
     await transfer.signAuthEntries({
+      address: fundKeypair.publicKey(),
       signAuthEntry: (auth) => {
         console.log("signAuthEntry called with auth:", auth);
         const result = fundSigner.signAuthEntry(auth);
@@ -67,7 +77,7 @@ export async function GET(
         return result;
       },
     });
-    
+
     console.log("Auth entries signed successfully");
 
     // Send the transaction
