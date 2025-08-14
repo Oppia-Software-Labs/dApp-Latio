@@ -6,18 +6,18 @@ interface SendStore extends SendModalState {
   // Actions
   openModal: () => void;
   closeModal: () => void;
-  setStep: (step: SendModalState['step']) => void;
+  setStep: (step: SendModalState["step"]) => void;
   setRecipient: (recipient: SendRecipient) => void;
   setAmount: (amount: SendAmount) => void;
   setDescription: (description: string) => void;
   setMemo: (memo: string) => void;
   resetModal: () => void;
-  sendTransaction: () => Promise<void>;
+  sendTransaction: (keyId: string, contractId: string) => Promise<void>;
 }
 
 const initialState: SendModalState = {
   isOpen: false,
-  step: 'recipient',
+  step: "recipient",
   isLoading: false,
 };
 
@@ -25,7 +25,7 @@ export const useSendStore = create<SendStore>((set, get) => ({
   ...initialState,
 
   openModal: () => {
-    set({ isOpen: true, step: 'recipient', error: undefined });
+    set({ isOpen: true, step: "recipient", error: undefined });
   },
 
   closeModal: () => {
@@ -38,11 +38,11 @@ export const useSendStore = create<SendStore>((set, get) => ({
   },
 
   setRecipient: (recipient) => {
-    set({ recipient, step: 'amount' });
+    set({ recipient, step: "amount" });
   },
 
   setAmount: (amount) => {
-    set({ amount, step: 'confirm' });
+    set({ amount, step: "confirm" });
   },
 
   setDescription: (description) => {
@@ -55,7 +55,7 @@ export const useSendStore = create<SendStore>((set, get) => ({
 
   resetModal: () => {
     set({
-      step: 'recipient',
+      step: "recipient",
       recipient: undefined,
       amount: undefined,
       description: undefined,
@@ -65,37 +65,39 @@ export const useSendStore = create<SendStore>((set, get) => ({
     });
   },
 
-  sendTransaction: async () => {
+  sendTransaction: async (keyId: string, contractId: string) => {
     const { recipient, amount, description } = get();
-    
+
     if (!recipient || !amount) {
       set({ error: "Missing recipient or amount" });
+      return;
+    }
+
+    if (!keyId || !contractId) {
+      set({ error: "Not authenticated" });
       return;
     }
 
     set({ isLoading: true, error: undefined });
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Import wallet service directly
+      const { walletService } = await import("../../wallet/services/wallet.service");
 
-      // Mock successful transaction
-      toast.success("Transaction sent successfully!", {
-        description: `${amount.amount} ${amount.currency} sent to ${recipient.name}`,
-        duration: 5000,
-      });
+      // Send real transaction
+      await walletService.sendXLM(recipient.address, amount.amount, keyId, contractId);
 
-      set({ step: 'success' });
+      set({ step: "success" });
 
       // Close modal after 3 seconds
       setTimeout(() => {
         get().closeModal();
       }, 3000);
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to send transaction";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to send transaction";
       set({ error: errorMessage });
-      
+
       toast.error("Transaction failed", {
         description: errorMessage,
         duration: 5000,

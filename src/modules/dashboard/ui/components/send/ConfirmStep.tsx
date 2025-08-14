@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSendStore } from "../../../state/send.store";
+import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { ArrowLeft, Shield, CheckCircle } from "lucide-react";
 
 export function ConfirmStep() {
@@ -17,13 +18,17 @@ export function ConfirmStep() {
     sendTransaction,
     isLoading,
   } = useSendStore();
+  
+  const { keyId, contractId } = useAuth();
 
   const handleBack = () => {
     setStep("amount");
   };
 
   const handleSend = () => {
-    sendTransaction();
+    if (keyId && contractId) {
+      sendTransaction(keyId, contractId);
+    }
   };
 
   if (!recipient || !amount) {
