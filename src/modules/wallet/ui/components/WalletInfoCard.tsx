@@ -46,10 +46,12 @@ export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
               Smart Wallet Address
             </label>
             <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-              <StellarAddress
-                address={contractId || ""}
-                className="flex-1 font-mono text-sm"
-              />
+              <div className="flex-1 font-mono text-sm">
+                <StellarAddress
+                  address={contractId || ""}
+                  className="text-foreground"
+                />
+              </div>
               <button
                 onClick={handleCopyAddress}
                 className="p-1 hover:bg-muted/50 rounded-md transition-colors"
