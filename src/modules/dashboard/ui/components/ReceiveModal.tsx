@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useReceiveStore } from "../../state/receive.store";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { StellarAddress } from "@/components/ui/stellar-address";
@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Copy, Download, QrCode, CheckCircle } from "lucide-react";
+import { Copy, Download, QrCode, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export function ReceiveModal() {
@@ -34,7 +34,7 @@ export function ReceiveModal() {
       setTimeout(() => {
         setCopied(false);
       }, 2000);
-    } catch (error) {
+    } catch {
       toast.error("Failed to copy address");
     }
   };

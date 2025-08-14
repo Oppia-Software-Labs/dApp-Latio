@@ -1,17 +1,10 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowUpRight, ArrowDownLeft, Clock, ExternalLink } from "lucide-react";
-
-interface StellarTransaction {
-  hash: string;
-  type: string;
-  amount: string;
-  created_at: string;
-}
+import { Clock } from "lucide-react";
 
 interface TransactionsCardProps {
-  transactions: StellarTransaction[];
+  transactions: any[];
   isLoading: boolean;
 }
 
@@ -19,42 +12,6 @@ export function TransactionsCard({
   transactions,
   isLoading,
 }: TransactionsCardProps) {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const getTransactionIcon = (type: string) => {
-    switch (type) {
-      case "payment":
-      case "send":
-        return <ArrowUpRight className="w-4 h-4 text-red-500" />;
-      case "receive":
-        return <ArrowDownLeft className="w-4 h-4 text-green-500" />;
-      default:
-        return <Clock className="w-4 h-4 text-blue-500" />;
-    }
-  };
-
-  const getTransactionColor = (type: string) => {
-    switch (type) {
-      case "payment":
-      case "send":
-        return "text-red-600";
-      case "receive":
-        return "text-green-600";
-      default:
-        return "text-blue-600";
-    }
-  };
-
-  const handleViewTransaction = (hash: string) => {
-    window.open(`https://stellar.expert/explorer/public/tx/${hash}`, "_blank");
-  };
 
   return (
     <Card>

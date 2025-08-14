@@ -22,7 +22,6 @@ import {
 } from "../data/mock-data";
 
 export function DashboardScreen() {
-  const { openModal } = useSendStore();
   const { contractId } = useAuth();
   const { balance, isLoading, fetchBalance } = useWalletStore();
 

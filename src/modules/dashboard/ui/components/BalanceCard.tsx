@@ -39,7 +39,9 @@ export function BalanceCard({ balance, isLoading = false }: BalanceCardProps) {
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-                  <span className="text-2xl font-bold text-muted-foreground">Loading...</span>
+                  <span className="text-2xl font-bold text-muted-foreground">
+                    Loading...
+                  </span>
                 </div>
               ) : (
                 <p className="text-2xl font-bold text-foreground">
@@ -73,7 +75,9 @@ export function BalanceCard({ balance, isLoading = false }: BalanceCardProps) {
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-                  <span className="text-xl font-semibold text-muted-foreground">Loading...</span>
+                  <span className="text-xl font-semibold text-muted-foreground">
+                    Loading...
+                  </span>
                 </div>
               ) : (
                 <p className="text-xl font-semibold text-foreground">
