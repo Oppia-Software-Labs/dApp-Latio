@@ -5,13 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { UserMenu } from "./UserMenu";
-import { 
-  Sun, 
-  Moon, 
-  Wallet, 
-  Menu,
-  X
-} from "lucide-react";
+import { Sun, Moon, Wallet, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 export function Navbar() {
@@ -24,15 +18,11 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-l border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center space-x-2">
-          <img
-            src="/latio_isologo.svg"
-            alt="Latio"
-            className="h-8 w-auto"
-          />
+          <img src="/latio_isologo.svg" alt="Latio" className="h-8 w-auto" />
           <span className="latio-gradient bg-clip-text text-transparent text-xl font-semibold">
             Latio
           </span>
@@ -47,7 +37,7 @@ export function Navbar() {
             aria-label="toggle theme"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           >
-            {theme === "dark" ? <Sun size={18}/> : <Moon size={18}/>}
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </Button>
 
           {/* User actions */}
@@ -78,9 +68,7 @@ export function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t bg-background">
           <div className="container py-4 space-y-4">
-            {isAuthenticated && (
-              <UserMenu variant="mobile" />
-            )}
+            {isAuthenticated && <UserMenu variant="mobile" />}
           </div>
         </div>
       )}

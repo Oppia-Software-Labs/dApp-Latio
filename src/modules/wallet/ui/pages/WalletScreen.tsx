@@ -2,11 +2,11 @@
 
 import { useEffect } from "react";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
-import { useWalletStore } from "../state/wallet.store";
-import { WalletBalanceCard } from "./components/WalletBalanceCard";
-import { WalletInfoCard } from "./components/WalletInfoCard";
-import { TestnetFundCard } from "./components/TestnetFundCard";
-import { TransactionsCard } from "./components/TransactionsCard";
+import { useWalletStore } from "../../state/wallet.store";
+import { WalletBalanceCard } from "../components/WalletBalanceCard";
+import { WalletInfoCard } from "@/modules/wallet/ui/components/WalletInfoCard";
+import { TestnetFundCard } from "@/modules/wallet/ui/components/TestnetFundCard";
+import { TransactionsCard } from "@/modules/wallet/ui/components/TransactionsCard";
 import { Loader2 } from "lucide-react";
 
 export function WalletScreen() {
