@@ -4,7 +4,7 @@ import {
   FundRequest,
   WalletTransaction,
 } from "../types/wallet.types";
-import { native, fundContract } from "@/lib/passkey";
+import { native } from "@/lib/passkey";
 
 interface StellarBalance {
   asset_type: string;
@@ -123,7 +123,7 @@ export class WalletService {
   }
 
   /**
-   * Request testnet funds using fundContract
+   * Request testnet funds using API route
    */
   async requestTestnetFunds(
     contractId: string,
@@ -136,8 +136,15 @@ export class WalletService {
     try {
       console.log("Requesting testnet funds for contractId:", contractId);
 
-      // Use fundContract to fund the smart wallet
-      const result = await fundContract(contractId);
+      // Use API route to fund the smart wallet
+      const response = await fetch(`/api/fund/${contractId}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fund wallet');
+      }
+
+      const result = await response.json();
 
       return {
         amount: result.amount,

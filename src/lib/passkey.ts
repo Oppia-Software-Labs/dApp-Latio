@@ -61,39 +61,8 @@ export const native = sac.getSACClient(ENV.NATIVE_CONTRACT_ID);
  * @returns Promise with the funding result
  */
 export async function fundContract(address: string) {
-  if (!address || address.trim() === "") {
-    throw new Error("Invalid address: address is empty or undefined");
-  }
-
-  try {
-    console.log(`Funding smart wallet: ${address}`);
-
-    const fundKeypair = await fundKeypairPromise;
-    const fundSigner = basicNodeSigner(fundKeypair, networkPassphrase);
-
-    // Create transfer transaction
-    const { built, ...transfer } = await native.transfer({
-      from: fundKeypair.publicKey(),
-      to: address,
-      amount: BigInt(25 * 10_000_000), // 25 XLM in stroops
-    });
-
-    // Sign the transaction
-    await transfer.signAuthEntries({
-      signAuthEntry: (auth) => fundSigner.signAuthEntry(auth),
-    });
-
-    // Send the transaction
-    const result = await server.send(built!.toXDR());
-
-    return {
-      hash: result.hash,
-      status: "completed",
-      amount: 25,
-      currency: "XLM",
-    };
-  } catch (error) {
-    console.error("Error funding contract:", error);
-    throw new Error(`Failed to fund smart wallet: ${error}`);
-  }
+  return fetch(`/api/fund/${address}`).then(async (res) => {
+    if (res.ok) return res.json();
+    else throw await res.text();
+  });
 }
