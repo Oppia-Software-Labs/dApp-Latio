@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useReceiveStore } from "../../state/receive.store";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { StellarAddress } from "@/components/ui/stellar-address";
+import { QRCodeComponent } from "@/components/ui/qr-code";
+import QRCode from "qrcode";
 import {
   Dialog,
   DialogContent,
@@ -37,9 +39,33 @@ export function ReceiveModal() {
     }
   };
 
-  const handleDownloadQR = () => {
-    // This would generate and download the QR code as an image
-    toast.info("QR download feature coming soon!");
+  const handleDownloadQR = async () => {
+    if (!contractId) return;
+    
+    try {
+      // Generate QR code as data URL
+      const qrDataURL = await QRCode.toDataURL(contractId, {
+        width: 400,
+        margin: 2,
+        color: {
+          dark: "#000000",
+          light: "#FFFFFF",
+        },
+      });
+      
+      // Create download link
+      const link = document.createElement("a");
+      link.download = `latio-wallet-qr-${contractId.slice(0, 8)}.png`;
+      link.href = qrDataURL;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success("QR code downloaded successfully!");
+    } catch (error) {
+      console.error("Error downloading QR code:", error);
+      toast.error("Failed to download QR code");
+    }
   };
 
   if (!contractId) {
@@ -62,15 +88,11 @@ export function ReceiveModal() {
             <Card className="p-6 bg-muted/30">
               <CardContent className="p-0">
                 <div className="w-48 h-48 mx-auto bg-white rounded-lg p-4 flex items-center justify-center">
-                  <div className="text-center">
-                    <QrCode className="w-32 h-32 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-sm text-muted-foreground">
-                      QR Code will be generated here
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Scanning this QR will copy the wallet address
-                    </p>
-                  </div>
+                  <QRCodeComponent 
+                    value={contractId || ""} 
+                    size={160}
+                    className="mx-auto"
+                  />
                 </div>
               </CardContent>
             </Card>
