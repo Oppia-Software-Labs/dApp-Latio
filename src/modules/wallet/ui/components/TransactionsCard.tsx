@@ -69,48 +69,12 @@ export function TransactionsCard({
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-muted-foreground">Loading transactions...</p>
           </div>
-        ) : transactions.length > 0 ? (
-          <div className="space-y-3">
-            {transactions.slice(0, 10).map((tx) => (
-              <div
-                key={tx.hash}
-                className="flex items-center justify-between p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                onClick={() => handleViewTransaction(tx.hash)}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                    {getTransactionIcon(tx.type)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      {tx.type === "payment" ? "Payment" : tx.type}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(tx.created_at)}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p
-                    className={`text-sm font-medium ${getTransactionColor(tx.type)}`}
-                  >
-                    {tx.type === "payment" || tx.type === "send" ? "-" : "+"}
-                    {parseFloat(tx.amount) / 10000000} XLM
-                  </p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <span className="text-xs text-muted-foreground">View</span>
-                    <ExternalLink className="w-3 h-3 text-muted-foreground" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         ) : (
           <div className="text-center py-8">
             <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">No transactions found</p>
+            <p className="text-muted-foreground">Recent Transactions</p>
             <p className="text-xs text-muted-foreground mt-2">
-              Your transaction history will appear here
+              SOON will be implemented
             </p>
           </div>
         )}

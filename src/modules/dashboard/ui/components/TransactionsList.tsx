@@ -87,54 +87,12 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
         </button>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          {transactions.map((transaction) => (
-            <div
-              key={transaction.id}
-              className="flex items-center justify-between p-3 rounded-lg border hover:bg-gray-50 transition-colors cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  {getTransactionIcon(transaction.type)}
-                </div>
-                <div>
-                  <p className="font-medium text-sm">
-                    {transaction.description}
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <span>{formatDate(transaction.timestamp)}</span>
-                    {transaction.to && (
-                      <>
-                        <span>•</span>
-                        <span>To: {transaction.to}</span>
-                      </>
-                    )}
-                    {transaction.from && (
-                      <>
-                        <span>•</span>
-                        <span>From: {transaction.from}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="text-right">
-                <p className="font-semibold text-sm">
-                  {transaction.type === 'send' || transaction.type === 'payment' ? '-' : '+'}
-                  {formatCurrency(transaction.amount, transaction.currency)}
-                </p>
-                {transaction.fee && (
-                  <p className="text-xs text-gray-500">
-                    Fee: {formatCurrency(transaction.fee, transaction.currency)}
-                  </p>
-                )}
-                <div className="mt-1">
-                  {getStatusBadge(transaction.status)}
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="text-center py-8">
+          <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <p className="text-muted-foreground">Recent Transactions</p>
+          <p className="text-xs text-muted-foreground mt-2">
+            SOON will be implemented
+          </p>
         </div>
       </CardContent>
     </Card>
