@@ -4,6 +4,7 @@ import { QuickAction } from "../../types/dashboard.types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, ArrowLeftRight, CreditCard, MapPin, QrCode, Wallet } from "lucide-react";
 import { useSendStore } from "../../state/send.store";
+import { useReceiveStore } from "../../state/receive.store";
 
 interface QuickActionsProps {
   actions: QuickAction[];
@@ -26,11 +27,14 @@ const colorClasses = {
 };
 
 export function QuickActions({ actions }: QuickActionsProps) {
-  const { openModal } = useSendStore();
+  const { openModal: openSendModal } = useSendStore();
+  const { openModal: openReceiveModal } = useReceiveStore();
 
   const handleAction = (action: QuickAction) => {
     if (action.id === "send") {
-      openModal();
+      openSendModal();
+    } else if (action.id === "receive") {
+      openReceiveModal();
     } else {
       action.action();
     }

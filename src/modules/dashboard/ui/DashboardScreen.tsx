@@ -7,6 +7,7 @@ import { TripsList } from "./components/TripsList";
 import { StatsGrid } from "./components/StatsGrid";
 import { ExchangeRates } from "./components/ExchangeRates";
 import { SendModal } from "./components/SendModal";
+import { ReceiveModal } from "./components/ReceiveModal";
 import { useSendStore } from "../state/send.store";
 import {
   mockBalance,
@@ -70,8 +71,9 @@ export function DashboardScreen() {
         </div>
       </div>
 
-      {/* Send Modal */}
+      {/* Modals */}
       <SendModal />
+      <ReceiveModal />
     </div>
   );
 }

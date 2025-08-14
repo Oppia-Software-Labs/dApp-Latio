@@ -142,12 +142,20 @@ export const mockQuickActions: QuickAction[] = [
     color: "blue"
   },
   {
+    id: "receive",
+    title: "Receive",
+    description: "Get QR code to receive",
+    icon: "QrCode",
+    action: () => console.log("Receive"),
+    color: "green"
+  },
+  {
     id: "exchange",
     title: "Exchange",
     description: "Convert currencies",
     icon: "ArrowLeftRight",
     action: () => console.log("Exchange"),
-    color: "green"
+    color: "purple"
   },
   {
     id: "pay",
@@ -155,14 +163,6 @@ export const mockQuickActions: QuickAction[] = [
     description: "Pay merchants",
     icon: "CreditCard",
     action: () => console.log("Pay"),
-    color: "purple"
-  },
-  {
-    id: "trip",
-    title: "Plan Trip",
-    description: "Create travel budget",
-    icon: "MapPin",
-    action: () => console.log("Plan trip"),
     color: "orange"
   }
 ];
