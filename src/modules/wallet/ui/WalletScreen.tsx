@@ -73,7 +73,9 @@ export function WalletScreen() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">My Smart Wallet</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              My Smart Wallet
+            </h1>
             <p className="text-muted-foreground">
               Manage your Stellar smart wallet and view real-time balance
             </p>

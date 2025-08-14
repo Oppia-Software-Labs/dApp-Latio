@@ -13,7 +13,7 @@ interface WalletInfoCardProps {
 }
 
 export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
-  const { keyId, contractId } = useAuth();
+  const { contractId } = useAuth();
 
   const handleCopyAddress = () => {
     if (contractId) {
@@ -35,21 +35,11 @@ export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg font-semibold">Wallet Information</CardTitle>
+          <CardTitle className="text-lg font-semibold">
+            Wallet Information
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Key ID */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">
-              Key ID
-            </label>
-            <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-              <span className="flex-1 font-mono text-sm text-foreground">
-                {keyId || "Not available"}
-              </span>
-            </div>
-          </div>
-
           {/* Wallet Address */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-muted-foreground">
@@ -110,7 +100,8 @@ export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
                   Smart Wallet
                 </p>
                 <p className="text-blue-700 dark:text-blue-300 mt-1">
-                  This is a Soroban smart contract wallet secured by your passkey.
+                  This is a Soroban smart contract wallet secured by your
+                  passkey.
                 </p>
               </div>
             </div>
@@ -123,14 +114,14 @@ export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Wallet Information</CardTitle>
+        <CardTitle className="text-lg font-semibold">
+          Wallet Information
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="text-center py-8">
           <Wallet className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">
-            Loading wallet information...
-          </p>
+          <p className="text-muted-foreground">Loading wallet information...</p>
         </div>
       </CardContent>
     </Card>
