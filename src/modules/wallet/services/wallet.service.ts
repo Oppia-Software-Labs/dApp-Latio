@@ -1,4 +1,9 @@
-import { WalletBalance, WalletInfo, FundRequest, WalletTransaction } from "../types/wallet.types";
+import {
+  WalletBalance,
+  WalletInfo,
+  FundRequest,
+  WalletTransaction,
+} from "../types/wallet.types";
 import { native, fundContract } from "@/lib/passkey";
 
 interface StellarBalance {
@@ -36,7 +41,9 @@ export class WalletService {
 
       // Get balance using native client from passkey
       const { result } = await native.balance({ id: contractId });
-      const xlmAmount = parseFloat(result.toString());
+      const xlmAmount = parseFloat(
+        (Number(result.toString()) / 1e7).toFixed(2)
+      );
       console.log("xlmAmount", xlmAmount);
       // Mock USD conversion (in real app, you'd use a real exchange rate API)
       const usdAmount = xlmAmount * 0.12; // Mock rate: 1 XLM = $0.12
