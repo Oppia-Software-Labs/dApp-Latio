@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useReceiveStore } from "../../state/receive.store";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
-import { StellarAddress } from "@/modules/wallet/utils/StellarAddress";
+import { StellarAddress } from "@/components/ui/stellar-address";
 import {
   Dialog,
   DialogContent,
@@ -13,13 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  X, 
-  Copy, 
-  Download, 
-  QrCode,
-  CheckCircle 
-} from "lucide-react";
+import { X, Copy, Download, QrCode, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export function ReceiveModal() {
@@ -29,12 +23,12 @@ export function ReceiveModal() {
 
   const handleCopyAddress = async () => {
     if (!contractId) return;
-    
+
     try {
       await navigator.clipboard.writeText(contractId);
       setCopied(true);
       toast.success("Address copied to clipboard!");
-      
+
       setTimeout(() => {
         setCopied(false);
       }, 2000);
@@ -85,12 +79,14 @@ export function ReceiveModal() {
           {/* Wallet Address Section */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium text-foreground">Wallet Address</h3>
+              <h3 className="text-sm font-medium text-foreground">
+                Wallet Address
+              </h3>
               <Badge variant="secondary" className="text-xs">
                 Stellar Testnet
               </Badge>
             </div>
-            
+
             <Card className="p-3 bg-muted/30">
               <CardContent className="p-0">
                 <div className="flex items-center justify-between">
@@ -116,7 +112,9 @@ export function ReceiveModal() {
 
           {/* Instructions */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-foreground">How to receive</h3>
+            <h3 className="text-sm font-medium text-foreground">
+              How to receive
+            </h3>
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
@@ -124,7 +122,10 @@ export function ReceiveModal() {
               </div>
               <div className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                <p>Funds will appear in your wallet once the transaction is confirmed</p>
+                <p>
+                  Funds will appear in your wallet once the transaction is
+                  confirmed
+                </p>
               </div>
               <div className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
