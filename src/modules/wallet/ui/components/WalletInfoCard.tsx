@@ -1,124 +1,137 @@
 "use client";
 
 import { WalletInfo } from "../../types/wallet.types";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wallet, Calendar, Activity, Copy, ExternalLink } from "lucide-react";
+import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { StellarAddress } from "@/components/ui/stellar-address";
+import { Copy, ExternalLink, Wallet, CheckCircle } from "lucide-react";
+import { toast } from "sonner";
 
 interface WalletInfoCardProps {
   walletInfo: WalletInfo | null;
 }
 
 export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
+  const { keyId, contractId } = useAuth();
+
   const handleCopyAddress = () => {
-    if (walletInfo?.address) {
-      navigator.clipboard.writeText(walletInfo.address);
+    if (contractId) {
+      navigator.clipboard.writeText(contractId);
+      toast.success("Wallet address copied to clipboard");
     }
   };
 
   const handleViewOnExplorer = () => {
-    if (walletInfo?.address) {
+    if (contractId) {
       window.open(
-        `https://stellar.expert/explorer/public/account/${walletInfo.address}`,
+        `https://stellar.expert/explorer/public/account/${contractId}`,
         "_blank"
       );
     }
   };
 
+  if (walletInfo) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">Wallet Information</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Key ID */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">
+              Key ID
+            </label>
+            <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
+              <span className="flex-1 font-mono text-sm text-foreground">
+                {keyId || "Not available"}
+              </span>
+            </div>
+          </div>
+
+          {/* Wallet Address */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">
+              Smart Wallet Address
+            </label>
+            <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
+              <StellarAddress
+                address={contractId || ""}
+                className="flex-1 font-mono text-sm"
+              />
+              <button
+                onClick={handleCopyAddress}
+                className="p-1 hover:bg-muted/50 rounded-md transition-colors"
+                title="Copy address"
+              >
+                <Copy className="w-4 h-4 text-muted-foreground" />
+              </button>
+              <button
+                onClick={handleViewOnExplorer}
+                className="p-1 hover:bg-muted/50 rounded-md transition-colors"
+                title="View on explorer"
+              >
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </div>
+          </div>
+
+          {/* Wallet Details */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">
+                Network
+              </label>
+              <div className="p-3 bg-muted/30 rounded-lg">
+                <span className="text-sm font-medium text-foreground capitalize">
+                  {walletInfo.network}
+                </span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">
+                Status
+              </label>
+              <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg">
+                <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                  Active
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Smart Wallet Info */}
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+            <div className="flex items-start gap-2">
+              <CheckCircle className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-medium text-blue-900 dark:text-blue-100">
+                  Smart Wallet
+                </p>
+                <p className="text-blue-700 dark:text-blue-300 mt-1">
+                  This is a Soroban smart contract wallet secured by your passkey.
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <Wallet className="w-5 h-5" />
-          Wallet Information
-        </CardTitle>
+        <CardTitle className="text-lg font-semibold">Wallet Information</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {walletInfo ? (
-          <>
-            {/* Address */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">
-                Wallet Address
-              </label>
-              <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                <StellarAddress
-                  address={walletInfo.address}
-                  className="flex-1 font-mono text-sm"
-                />
-                <button
-                  onClick={handleCopyAddress}
-                  className="p-1 hover:bg-muted/50 rounded-md transition-colors"
-                >
-                  <Copy className="w-4 h-4 text-muted-foreground" />
-                </button>
-                <button
-                  onClick={handleViewOnExplorer}
-                  className="p-1 hover:bg-muted/50 rounded-md transition-colors"
-                >
-                  <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                </button>
-              </div>
-            </div>
-
-            {/* Network Info */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">
-                  Network
-                </label>
-                <div className="p-3 bg-muted/30 rounded-lg">
-                  <span className="text-sm font-medium text-foreground capitalize">
-                    {walletInfo.network}
-                  </span>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">
-                  Status
-                </label>
-                <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg">
-                  <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                    Active
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Dates */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  Created
-                </label>
-                <div className="p-3 bg-muted/30 rounded-lg">
-                  <span className="text-sm text-foreground">
-                    {walletInfo.createdAt.toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                  <Activity className="w-4 h-4" />
-                  Last Activity
-                </label>
-                <div className="p-3 bg-muted/30 rounded-lg">
-                  <span className="text-sm text-foreground">
-                    {walletInfo.lastActivity.toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="text-center py-8">
-            <Wallet className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">
-              Loading wallet information...
-            </p>
-          </div>
-        )}
+      <CardContent>
+        <div className="text-center py-8">
+          <Wallet className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <p className="text-muted-foreground">
+            Loading wallet information...
+          </p>
+        </div>
       </CardContent>
     </Card>
   );

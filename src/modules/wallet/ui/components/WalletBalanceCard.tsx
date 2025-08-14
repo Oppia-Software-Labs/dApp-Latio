@@ -1,10 +1,11 @@
 "use client";
 
 import { WalletBalance } from "../../types/wallet.types";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, RefreshCw } from "lucide-react";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { useWalletStore } from "../../state/wallet.store";
+import { RefreshCw, TrendingUp } from "lucide-react";
 
 interface WalletBalanceCardProps {
   balance: WalletBalance | null;
@@ -15,12 +16,12 @@ export function WalletBalanceCard({
   balance,
   isLoading,
 }: WalletBalanceCardProps) {
-  const { keyId } = useAuth();
+  const { contractId } = useAuth();
   const { fetchBalance } = useWalletStore();
 
   const handleRefresh = () => {
-    if (keyId) {
-      fetchBalance(keyId);
+    if (contractId) {
+      fetchBalance(contractId);
     }
   };
 
@@ -30,6 +31,35 @@ export function WalletBalanceCard({
       currency: currency,
     }).format(amount);
   };
+
+  if (!balance) {
+    return (
+      <Card className="bg-card border-0 shadow-lg">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold text-card-foreground">
+            Wallet Balance
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">No balance data available</p>
+            <Button
+              onClick={handleRefresh}
+              variant="outline"
+              size="sm"
+              className="mt-2"
+              disabled={isLoading}
+            >
+              <RefreshCw
+                className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+              />
+              Refresh
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-card border-0 shadow-lg">
@@ -72,36 +102,22 @@ export function WalletBalanceCard({
         </div>
 
         {/* Local Currency */}
-        {balance && (
-          <div className="bg-background rounded-lg p-4 shadow-sm border">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  Local ({balance.localCurrency.currency})
-                </p>
-                <p className="text-xl font-semibold text-foreground">
-                  {balance.localCurrency.symbol}
-                  {balance.localCurrency.amount.toLocaleString()}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-muted-foreground">
-                  ≈ {formatCurrency(balance.usd, "USD")}
-                </p>
-              </div>
+        <div className="bg-background rounded-lg p-4 shadow-sm border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Local ({balance.localCurrency.currency})
+              </p>
+              <p className="text-xl font-semibold text-foreground">
+                {balance.localCurrency.symbol}
+                {balance.localCurrency.amount.toLocaleString()}
+              </p>
             </div>
-          </div>
-        )}
-
-        {/* Network Status */}
-        <div className="bg-muted/30 rounded-lg p-3">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Network:</span>
-            <span className="text-foreground font-medium">Testnet</span>
-          </div>
-          <div className="flex items-center justify-between text-sm mt-1">
-            <span className="text-muted-foreground">Status:</span>
-            <span className="text-green-600 font-medium">Connected</span>
+            <div className="text-right">
+              <p className="text-sm text-muted-foreground">
+                ≈ {formatCurrency(balance.usd, "USD")}
+              </p>
+            </div>
           </div>
         </div>
       </CardContent>

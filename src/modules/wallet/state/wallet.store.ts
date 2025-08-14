@@ -55,6 +55,7 @@ export const useWalletStore = create<WalletState & WalletActions>(
     async fetchWalletInfo(publicKey: string) {
       set({ isLoading: true, error: null });
       try {
+        console.log("fetching wallet info", publicKey);
         const walletInfo = await walletService.getWalletInfo(publicKey);
         set({ walletInfo, isLoading: false });
       } catch (error) {
