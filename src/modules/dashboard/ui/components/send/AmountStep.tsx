@@ -13,6 +13,7 @@ import {
 } from "../../../data/send-mock-data";
 import { SendAmount } from "../../../types/send.types";
 import { ArrowLeft, DollarSign, Calculator } from "lucide-react";
+import { StellarAddress } from "@/components/ui/stellar-address";
 
 export function AmountStep() {
   const { recipient, setAmount, setStep, setDescription } = useSendStore();
@@ -65,7 +66,9 @@ export function AmountStep() {
             <p className="font-medium text-sm text-foreground">
               {recipient.name}
             </p>
-            <p className="text-xs text-muted-foreground">{recipient.address}</p>
+            <p className="text-xs text-muted-foreground">
+              <StellarAddress address={recipient.address} />
+            </p>
           </div>
         </div>
       )}
