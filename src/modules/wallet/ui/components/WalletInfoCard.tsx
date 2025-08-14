@@ -25,7 +25,7 @@ export function WalletInfoCard({ walletInfo }: WalletInfoCardProps) {
   const handleViewOnExplorer = () => {
     if (contractId) {
       window.open(
-        `https://stellar.expert/explorer/public/account/${contractId}`,
+        `https://stellar.expert/explorer/testnet/contract/${contractId}`,
         "_blank"
       );
     }
