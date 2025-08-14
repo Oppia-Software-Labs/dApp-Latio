@@ -4,7 +4,7 @@ import {
   FundRequest,
   WalletTransaction,
 } from "../types/wallet.types";
-import { native } from "@/lib/passkey";
+import { native, account, server } from "@/lib/passkey";
 
 interface StellarBalance {
   asset_type: string;
@@ -184,29 +184,23 @@ export class WalletService {
     try {
       console.log(`Sending ${amount} XLM from ${contractId} to ${to}`);
 
-      const response = await fetch("/api/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          to,
-          amount,
-          keyId,
-          contractId,
-        }),
+      // Create transfer transaction
+      const transfer = await native.transfer({
+        to: to,
+        from: contractId,
+        amount: BigInt(amount * 10_000_000), // Convert to stroops
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to send XLM");
-      }
+      // Sign the transaction
+      await account.sign(transfer, { keyId: keyId });
 
-      const result = await response.json();
+      // Send the transaction
+      const result = await server.send(transfer.built!.toXDR());
+
       return {
         hash: result.hash,
-        amount: result.amount,
-        currency: result.currency,
+        amount: amount,
+        currency: "XLM",
       };
     } catch (error) {
       console.error("Error sending XLM:", error);
