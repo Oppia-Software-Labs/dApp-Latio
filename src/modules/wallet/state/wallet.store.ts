@@ -22,6 +22,12 @@ interface WalletActions {
   fetchWalletInfo: (contractId: string) => Promise<void>;
   fetchTransactions: (contractId: string) => Promise<void>;
   requestFunds: (contractId: string, amount?: number) => Promise<void>;
+  sendXLM: (
+    to: string,
+    amount: number,
+    keyId: string,
+    contractId: string
+  ) => Promise<void>;
   clearError: () => void;
 }
 
@@ -112,6 +118,41 @@ export const useWalletStore = create<WalletState & WalletActions>(
           error instanceof Error ? error.message : "Error requesting funds";
         set({ error: errorMessage, isLoading: false });
         toast.error("Error requesting funds", {
+          description: errorMessage,
+          duration: 4000,
+        });
+      }
+    },
+
+    async sendXLM(
+      to: string,
+      amount: number,
+      keyId: string,
+      contractId: string
+    ) {
+      set({ isLoading: true, error: null });
+      try {
+        const result = await walletService.sendXLM(
+          to,
+          amount,
+          keyId,
+          contractId
+        );
+        set({ isLoading: false });
+
+        toast.success("XLM sent successfully!", {
+          description: `${amount} XLM sent to ${to}`,
+          duration: 4000,
+        });
+
+        // Refresh balance and transactions after successful send
+        await get().fetchBalance(contractId);
+        await get().fetchTransactions(contractId);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Error sending XLM";
+        set({ error: errorMessage, isLoading: false });
+        toast.error("Error sending XLM", {
           description: errorMessage,
           duration: 4000,
         });

@@ -165,6 +165,56 @@ export class WalletService {
   }
 
   /**
+   * Send XLM to another address
+   */
+  async sendXLM(
+    to: string,
+    amount: number,
+    keyId: string,
+    contractId: string
+  ): Promise<{ hash: string; amount: number; currency: string }> {
+    if (!to || !amount || !keyId || !contractId) {
+      throw new Error("Missing required parameters for sending XLM");
+    }
+
+    if (amount <= 0) {
+      throw new Error("Amount must be greater than 0");
+    }
+
+    try {
+      console.log(`Sending ${amount} XLM from ${contractId} to ${to}`);
+
+      const response = await fetch("/api/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to,
+          amount,
+          keyId,
+          contractId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to send XLM");
+      }
+
+      const result = await response.json();
+      return {
+        hash: result.hash,
+        amount: result.amount,
+        currency: result.currency,
+      };
+    } catch (error) {
+      console.error("Error sending XLM:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Get recent transactions (mocked for now)
    */
   async getRecentTransactions(
