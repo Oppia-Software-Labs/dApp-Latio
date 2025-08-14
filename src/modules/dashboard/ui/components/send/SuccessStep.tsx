@@ -6,20 +6,22 @@ import { useSendStore } from "../../../state/send.store";
 import { CheckCircle, Copy, ExternalLink, Home } from "lucide-react";
 
 export function SuccessStep() {
-  const { recipient, amount, closeModal } = useSendStore();
+  const { recipient, amount, transactionHash, closeModal } = useSendStore();
 
   const handleCopyTransactionId = () => {
-    // Mock transaction ID
-    const txId = "txn_" + Math.random().toString(36).substr(2, 9);
-    navigator.clipboard.writeText(txId);
+    if (transactionHash) {
+      navigator.clipboard.writeText(transactionHash);
+    }
   };
 
   const handleViewOnExplorer = () => {
-    // Mock explorer URL
-    window.open(
-      "https://stellar.expert/explorer/public/tx/txn_example",
-      "_blank"
-    );
+    if (transactionHash) {
+      // Use Stellar Lab explorer for testnet
+      window.open(
+        `https://laboratory.stellar.org/#explorer?resource=transactions&values=${transactionHash}`,
+        "_blank"
+      );
+    }
   };
 
   return (
@@ -77,7 +79,13 @@ export function SuccessStep() {
             </div>
             <div className="flex justify-between items-center text-xs text-muted-foreground/70">
               <span>Transaction ID:</span>
-              <span>txn_example123</span>
+              <span className="font-mono">
+                {transactionHash ? (
+                  <StellarAddress address={transactionHash} />
+                ) : (
+                  "Loading..."
+                )}
+              </span>
             </div>
           </div>
         </div>

@@ -19,6 +19,7 @@ const initialState: SendModalState = {
   isOpen: false,
   step: "recipient",
   isLoading: false,
+  transactionHash: undefined,
 };
 
 export const useSendStore = create<SendStore>((set, get) => ({
@@ -62,6 +63,7 @@ export const useSendStore = create<SendStore>((set, get) => ({
       memo: undefined,
       isLoading: false,
       error: undefined,
+      transactionHash: undefined,
     });
   },
 
@@ -87,14 +89,18 @@ export const useSendStore = create<SendStore>((set, get) => ({
       );
 
       // Send real transaction
-      await walletService.sendXLM(
+      const result = await walletService.sendXLM(
         recipient.address,
         amount.amount,
         keyId,
         contractId
       );
 
-      set({ step: "success" });
+      // Store transaction hash for success step
+      set({ 
+        step: "success",
+        transactionHash: result.hash 
+      });
 
       // Close modal after 10 seconds
       setTimeout(() => {

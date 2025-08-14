@@ -30,6 +30,7 @@ export interface SendModalState {
   memo?: string;
   isLoading: boolean;
   error?: string;
+  transactionHash?: string;
 }
 
 export interface CurrencyOption {
