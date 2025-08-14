@@ -1,6 +1,11 @@
 import { WalletBalance, WalletInfo, FundRequest } from "../types/wallet.types";
 
-interface MockTransaction {
+interface StellarBalance {
+  asset_type: string;
+  balance: string;
+}
+
+interface StellarTransaction {
   hash: string;
   type: string;
   amount: string;
@@ -20,25 +25,52 @@ export class WalletService {
   /**
    * Get real wallet balance from Stellar network
    */
-  async getWalletBalance(publicKey: string): Promise<WalletBalance> {
+  async getWalletBalance(contractId: string): Promise<WalletBalance> {
     try {
-      // For now, return mock data while we resolve SDK issues
-      // In production, this would call the Stellar Horizon API
-      const mockXlmAmount = Math.random() * 1000; // Random amount for demo
-      const usdAmount = mockXlmAmount * 0.12; // Mock rate: 1 XLM = $0.12
+      console.log('Fetching balance for contractId:', contractId);
+      
+      // For now, simulate real balance fetching
+      // In production, this would call the Stellar Horizon API directly
+      const response = await fetch(`https://horizon-testnet.stellar.org/accounts/${contractId}`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch account: ${response.statusText}`);
+      }
+      
+      const accountData = await response.json();
+      
+      // Get XLM balance (native asset)
+      const xlmBalance = accountData.balances.find(
+        (balance: StellarBalance) => balance.asset_type === "native"
+      );
+      const xlmAmount = xlmBalance ? parseFloat(xlmBalance.balance) : 0;
+
+      // Mock USD conversion (in real app, you'd use a real exchange rate API)
+      const usdAmount = xlmAmount * 0.12; // Mock rate: 1 XLM = $0.12
+
+      // Mock local currency (MXN)
       const mxnAmount = usdAmount * 18.5; // Mock rate: 1 USD = 18.5 MXN
 
+      // Mock EUR currency
+      const eurAmount = usdAmount * 0.85; // Mock rate: 1 USD = 0.85 EUR
+
       return {
-        xlm: mockXlmAmount,
+        xlm: xlmAmount,
         usd: usdAmount,
         localCurrency: {
           amount: mxnAmount,
           currency: "MXN",
           symbol: "$",
         },
+        eur: {
+          amount: eurAmount,
+          currency: "EUR",
+          symbol: "€",
+        },
       };
     } catch (error) {
       console.error("Error fetching wallet balance:", error);
+      // Return mock data if network fails
       return {
         xlm: 0,
         usd: 0,
@@ -47,6 +79,11 @@ export class WalletService {
           currency: "MXN",
           symbol: "$",
         },
+        eur: {
+          amount: 0,
+          currency: "EUR",
+          symbol: "€",
+        },
       };
     }
   }
@@ -54,20 +91,28 @@ export class WalletService {
   /**
    * Get wallet information
    */
-  async getWalletInfo(publicKey: string): Promise<WalletInfo> {
+  async getWalletInfo(contractId: string): Promise<WalletInfo> {
     try {
+      const response = await fetch(`https://horizon-testnet.stellar.org/accounts/${contractId}`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch account: ${response.statusText}`);
+      }
+      
+      const accountData = await response.json();
+
       return {
-        address: publicKey,
-        publicKey: publicKey,
+        address: contractId,
+        publicKey: contractId,
         network: "testnet",
-        createdAt: new Date(),
+        createdAt: new Date(accountData.created_at),
         lastActivity: new Date(),
       };
     } catch (error) {
       console.error("Error fetching wallet info:", error);
       return {
-        address: publicKey,
-        publicKey: publicKey,
+        address: contractId,
+        publicKey: contractId,
         network: "testnet",
         createdAt: new Date(),
         lastActivity: new Date(),
@@ -79,13 +124,15 @@ export class WalletService {
    * Request testnet funds (Friendbot)
    */
   async requestTestnetFunds(
-    publicKey: string,
+    contractId: string,
     amount: number = 10000
   ): Promise<FundRequest> {
     try {
+      console.log('Requesting testnet funds for contractId:', contractId);
+      
       // Friendbot endpoint for testnet funding
       const response = await fetch(
-        `https://friendbot.stellar.org/?addr=${publicKey}`
+        `https://friendbot.stellar.org/?addr=${contractId}`
       );
 
       if (!response.ok) {
@@ -116,28 +163,22 @@ export class WalletService {
    * Get recent transactions
    */
   async getRecentTransactions(
-    publicKey: string,
+    contractId: string,
     limit: number = 10
-  ): Promise<MockTransaction[]> {
+  ): Promise<StellarTransaction[]> {
     try {
-      // For now, return mock transactions
-      // In production, this would call the Stellar Horizon API
-      const mockTransactions: MockTransaction[] = [
-        {
-          hash: "mock_tx_1",
-          type: "payment",
-          amount: "100",
-          created_at: new Date(Date.now() - 3600000).toISOString(),
-        },
-        {
-          hash: "mock_tx_2",
-          type: "receive",
-          amount: "50",
-          created_at: new Date(Date.now() - 7200000).toISOString(),
-        },
-      ];
-
-      return mockTransactions;
+      console.log('Fetching transactions for contractId:', contractId);
+      
+      const response = await fetch(
+        `https://horizon-testnet.stellar.org/accounts/${contractId}/transactions?limit=${limit}&order=desc`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch transactions: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      return data._embedded.records || [];
     } catch (error) {
       console.error("Error fetching transactions:", error);
       return [];

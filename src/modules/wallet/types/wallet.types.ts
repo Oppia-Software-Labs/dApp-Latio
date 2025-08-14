@@ -6,20 +6,11 @@ export interface WalletBalance {
     currency: string;
     symbol: string;
   };
-}
-
-export interface WalletTransaction {
-  id: string;
-  type: "send" | "receive" | "exchange" | "payment";
-  amount: number;
-  currency: string;
-  to?: string;
-  from?: string;
-  description: string;
-  status: "pending" | "completed" | "failed";
-  timestamp: Date;
-  fee?: number;
-  exchangeRate?: number;
+  eur: {
+    amount: number;
+    currency: string;
+    symbol: string;
+  };
 }
 
 export interface WalletInfo {
@@ -36,4 +27,18 @@ export interface FundRequest {
   status: "pending" | "completed" | "failed";
   timestamp: Date;
   transactionId?: string;
+}
+
+export interface WalletTransaction {
+  id: string;
+  type: "send" | "receive" | "exchange" | "payment";
+  amount: number;
+  currency: string;
+  to?: string;
+  from?: string;
+  description: string;
+  status: "pending" | "completed" | "failed";
+  timestamp: Date;
+  fee?: number;
+  hash?: string;
 }

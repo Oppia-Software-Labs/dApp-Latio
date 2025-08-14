@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUpRight, ArrowDownLeft, Clock, ExternalLink } from "lucide-react";
 
-interface MockTransaction {
+interface StellarTransaction {
   hash: string;
   type: string;
   amount: string;
@@ -11,7 +11,7 @@ interface MockTransaction {
 }
 
 interface TransactionsCardProps {
-  transactions: MockTransaction[];
+  transactions: StellarTransaction[];
   isLoading: boolean;
 }
 
@@ -95,7 +95,7 @@ export function TransactionsCard({
                     className={`text-sm font-medium ${getTransactionColor(tx.type)}`}
                   >
                     {tx.type === "payment" || tx.type === "send" ? "-" : "+"}
-                    {tx.amount} XLM
+                    {parseFloat(tx.amount) / 10000000} XLM
                   </p>
                   <div className="flex items-center gap-1 mt-1">
                     <span className="text-xs text-muted-foreground">View</span>

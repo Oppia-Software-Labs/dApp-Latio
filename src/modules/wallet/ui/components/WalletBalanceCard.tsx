@@ -101,6 +101,40 @@ export function WalletBalanceCard({
           </div>
         </div>
 
+        {/* USD Balance */}
+        <div className="bg-background rounded-lg p-4 shadow-sm border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">USD</p>
+              <p className="text-xl font-semibold text-foreground">
+                {formatCurrency(balance.usd, "USD")}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-muted-foreground">
+                ≈ {balance.xlm.toFixed(2)} XLM
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* EUR Balance */}
+        <div className="bg-background rounded-lg p-4 shadow-sm border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">EUR</p>
+              <p className="text-xl font-semibold text-foreground">
+                {formatCurrency(balance.eur.amount, "EUR")}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-muted-foreground">
+                ≈ {formatCurrency(balance.usd, "USD")}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Local Currency */}
         <div className="bg-background rounded-lg p-4 shadow-sm border">
           <div className="flex items-center justify-between">

@@ -3,7 +3,7 @@ import { WalletBalance, WalletInfo, FundRequest } from "../types/wallet.types";
 import { walletService } from "../services/wallet.service";
 import { toast } from "sonner";
 
-interface MockTransaction {
+interface StellarTransaction {
   hash: string;
   type: string;
   amount: string;
@@ -13,17 +13,17 @@ interface MockTransaction {
 interface WalletState {
   balance: WalletBalance | null;
   walletInfo: WalletInfo | null;
-  transactions: MockTransaction[];
+  transactions: StellarTransaction[];
   isLoading: boolean;
   error: string | null;
   fundRequest: FundRequest | null;
 }
 
 interface WalletActions {
-  fetchBalance: (publicKey: string) => Promise<void>;
-  fetchWalletInfo: (publicKey: string) => Promise<void>;
-  fetchTransactions: (publicKey: string) => Promise<void>;
-  requestFunds: (publicKey: string, amount?: number) => Promise<void>;
+  fetchBalance: (contractId: string) => Promise<void>;
+  fetchWalletInfo: (contractId: string) => Promise<void>;
+  fetchTransactions: (contractId: string) => Promise<void>;
+  requestFunds: (contractId: string, amount?: number) => Promise<void>;
   clearError: () => void;
 }
 
@@ -36,10 +36,10 @@ export const useWalletStore = create<WalletState & WalletActions>(
     error: null,
     fundRequest: null,
 
-    async fetchBalance(publicKey: string) {
+    async fetchBalance(contractId: string) {
       set({ isLoading: true, error: null });
       try {
-        const balance = await walletService.getWalletBalance(publicKey);
+        const balance = await walletService.getWalletBalance(contractId);
         set({ balance, isLoading: false });
       } catch (error) {
         const errorMessage =
@@ -52,11 +52,10 @@ export const useWalletStore = create<WalletState & WalletActions>(
       }
     },
 
-    async fetchWalletInfo(publicKey: string) {
+    async fetchWalletInfo(contractId: string) {
       set({ isLoading: true, error: null });
       try {
-        console.log("fetching wallet info", publicKey);
-        const walletInfo = await walletService.getWalletInfo(publicKey);
+        const walletInfo = await walletService.getWalletInfo(contractId);
         set({ walletInfo, isLoading: false });
       } catch (error) {
         const errorMessage =
@@ -69,11 +68,11 @@ export const useWalletStore = create<WalletState & WalletActions>(
       }
     },
 
-    async fetchTransactions(publicKey: string) {
+    async fetchTransactions(contractId: string) {
       set({ isLoading: true, error: null });
       try {
         const transactions =
-          await walletService.getRecentTransactions(publicKey);
+          await walletService.getRecentTransactions(contractId);
         set({ transactions, isLoading: false });
       } catch (error) {
         const errorMessage =
@@ -88,11 +87,11 @@ export const useWalletStore = create<WalletState & WalletActions>(
       }
     },
 
-    async requestFunds(publicKey: string, amount: number = 10000) {
+    async requestFunds(contractId: string, amount: number = 10000) {
       set({ isLoading: true, error: null });
       try {
         const fundRequest = await walletService.requestTestnetFunds(
-          publicKey,
+          contractId,
           amount
         );
         set({ fundRequest, isLoading: false });
@@ -103,7 +102,7 @@ export const useWalletStore = create<WalletState & WalletActions>(
             duration: 4000,
           });
           // Refresh balance after successful fund request
-          await get().fetchBalance(publicKey);
+          await get().fetchBalance(contractId);
         } else {
           toast.error("Failed to request testnet funds", {
             description: "Please try again later",
