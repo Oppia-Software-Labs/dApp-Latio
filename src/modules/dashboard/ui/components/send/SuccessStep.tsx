@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { StellarAddress } from "@/components/ui/stellar-address";
 import { useSendStore } from "../../../state/send.store";
 import { CheckCircle, Copy, ExternalLink, Home } from "lucide-react";
 
@@ -54,7 +55,7 @@ export function SuccessStep() {
                 {recipient.name}
               </p>
               <p className="text-xs text-muted-foreground">
-                {recipient.address}
+                <StellarAddress address={recipient.address} />
               </p>
             </div>
           </div>

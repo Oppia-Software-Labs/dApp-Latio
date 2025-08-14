@@ -6,8 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSendStore } from "../../../state/send.store";
 import { useWalletStore } from "@/modules/wallet/state/wallet.store";
-import { getAvailableCurrencies, formatBalance } from "@/modules/wallet/utils/balance.util";
-import { calculateFee, calculateXlmEquivalent, calculateTotal } from "../../../data/send-mock-data";
+import {
+  getAvailableCurrencies,
+  formatBalance,
+} from "@/modules/wallet/utils/balance.util";
+import {
+  calculateFee,
+  calculateXlmEquivalent,
+  calculateTotal,
+} from "../../../data/send-mock-data";
 import { SendAmount } from "../../../types/send.types";
 import { ArrowLeft, DollarSign, Calculator } from "lucide-react";
 import { StellarAddress } from "@/components/ui/stellar-address";
@@ -15,10 +22,12 @@ import { StellarAddress } from "@/components/ui/stellar-address";
 export function AmountStep() {
   const { recipient, setAmount, setStep, setDescription } = useSendStore();
   const { balance } = useWalletStore();
-  
+
   // Get real currencies from wallet balance
   const availableCurrencies = getAvailableCurrencies(balance);
-  const [selectedCurrency, setSelectedCurrency] = useState(availableCurrencies[0]);
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    availableCurrencies[0]
+  );
   const [amount, setAmountValue] = useState("");
   const [description, setDescriptionValue] = useState("");
 
@@ -119,7 +128,8 @@ export function AmountStep() {
           />
         </div>
         <p className="text-xs text-muted-foreground mt-1">
-          Available: {formatBalance(selectedCurrency.balance, selectedCurrency.code)}
+          Available:{" "}
+          {formatBalance(selectedCurrency.balance, selectedCurrency.code)}
         </p>
       </div>
 

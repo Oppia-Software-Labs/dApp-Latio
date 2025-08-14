@@ -96,10 +96,10 @@ export const useSendStore = create<SendStore>((set, get) => ({
 
       set({ step: "success" });
 
-      // Close modal after 3 seconds
+      // Close modal after 10 seconds
       setTimeout(() => {
         get().closeModal();
-      }, 3000);
+      }, 10000);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to send transaction";
