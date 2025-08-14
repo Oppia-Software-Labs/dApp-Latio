@@ -41,7 +41,7 @@ export function ReceiveModal() {
 
   const handleDownloadQR = async () => {
     if (!contractId) return;
-    
+
     try {
       // Generate QR code as data URL
       const qrDataURL = await QRCode.toDataURL(contractId, {
@@ -52,7 +52,7 @@ export function ReceiveModal() {
           light: "#FFFFFF",
         },
       });
-      
+
       // Create download link
       const link = document.createElement("a");
       link.download = `latio-wallet-qr-${contractId.slice(0, 8)}.png`;
@@ -60,7 +60,7 @@ export function ReceiveModal() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       toast.success("QR code downloaded successfully!");
     } catch (error) {
       console.error("Error downloading QR code:", error);
@@ -88,8 +88,8 @@ export function ReceiveModal() {
             <Card className="p-6 bg-muted/30">
               <CardContent className="p-0">
                 <div className="w-48 h-48 mx-auto bg-white rounded-lg p-4 flex items-center justify-center">
-                  <QRCodeComponent 
-                    value={contractId || ""} 
+                  <QRCodeComponent
+                    value={contractId || ""}
                     size={160}
                     className="mx-auto"
                   />

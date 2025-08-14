@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { BalanceCard } from "./components/BalanceCard";
 import { QuickActions } from "./components/QuickActions";
 import { TransactionsList } from "./components/TransactionsList";
@@ -9,6 +10,8 @@ import { ExchangeRates } from "./components/ExchangeRates";
 import { SendModal } from "./components/SendModal";
 import { ReceiveModal } from "./components/ReceiveModal";
 import { useSendStore } from "../state/send.store";
+import { useAuth } from "@/modules/auth/hooks/useAuth";
+import { useWalletStore } from "@/modules/wallet/state/wallet.store";
 import {
   mockBalance,
   mockTransactions,
@@ -20,6 +23,18 @@ import {
 
 export function DashboardScreen() {
   const { openModal } = useSendStore();
+  const { contractId } = useAuth();
+  const { balance, isLoading, fetchBalance } = useWalletStore();
+
+  // Fetch real balance when component mounts or contractId changes
+  React.useEffect(() => {
+    if (contractId && contractId.trim() !== "") {
+      fetchBalance(contractId);
+    }
+  }, [contractId, fetchBalance]);
+
+  // Use real balance if available, otherwise fall back to mock
+  const displayBalance = balance || mockBalance;
 
   return (
     <div className="min-h-screen bg-background p-4">
@@ -47,7 +62,7 @@ export function DashboardScreen() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Balance & Quick Actions */}
           <div className="space-y-6">
-            <BalanceCard balance={mockBalance} />
+            <BalanceCard balance={displayBalance} isLoading={isLoading} />
             <QuickActions actions={mockQuickActions} />
           </div>
 

@@ -3,15 +3,16 @@
 import { Balance } from "../../types/dashboard.types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Download, TrendingUp } from "lucide-react";
+import { Send, Download, TrendingUp, Loader2 } from "lucide-react";
 import { useSendStore } from "../../state/send.store";
 import { useReceiveStore } from "../../state/receive.store";
 
 interface BalanceCardProps {
   balance: Balance;
+  isLoading?: boolean;
 }
 
-export function BalanceCard({ balance }: BalanceCardProps) {
+export function BalanceCard({ balance, isLoading = false }: BalanceCardProps) {
   const { openModal } = useSendStore();
   const { openModal: openReceiveModal } = useReceiveStore();
 
@@ -35,18 +36,29 @@ export function BalanceCard({ balance }: BalanceCardProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-muted-foreground">Stellar (XLM)</p>
-              <p className="text-2xl font-bold text-foreground">
-                {balance.xlm.toLocaleString()} XLM
-              </p>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                  <span className="text-2xl font-bold text-muted-foreground">Loading...</span>
+                </div>
+              ) : (
+                <p className="text-2xl font-bold text-foreground">
+                  {balance.xlm.toLocaleString()} XLM
+                </p>
+              )}
             </div>
             <div className="text-right">
-              <p className="text-sm text-muted-foreground">
-                ≈ {formatCurrency(balance.usd, "USD")}
-              </p>
-              <div className="flex items-center text-green-600 text-sm">
-                <TrendingUp className="w-4 h-4 mr-1" />
-                +2.4%
-              </div>
+              {!isLoading && (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    ≈ {formatCurrency(balance.usd, "USD")}
+                  </p>
+                  <div className="flex items-center text-green-600 text-sm">
+                    <TrendingUp className="w-4 h-4 mr-1" />
+                    +2.4%
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -58,15 +70,24 @@ export function BalanceCard({ balance }: BalanceCardProps) {
               <p className="text-sm text-muted-foreground">
                 Local ({balance.localCurrency.currency})
               </p>
-              <p className="text-xl font-semibold text-foreground">
-                {balance.localCurrency.symbol}
-                {balance.localCurrency.amount.toLocaleString()}
-              </p>
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                  <span className="text-xl font-semibold text-muted-foreground">Loading...</span>
+                </div>
+              ) : (
+                <p className="text-xl font-semibold text-foreground">
+                  {balance.localCurrency.symbol}
+                  {balance.localCurrency.amount.toLocaleString()}
+                </p>
+              )}
             </div>
             <div className="text-right">
-              <p className="text-sm text-muted-foreground">
-                ≈ {formatCurrency(balance.usd, "USD")}
-              </p>
+              {!isLoading && (
+                <p className="text-sm text-muted-foreground">
+                  ≈ {formatCurrency(balance.usd, "USD")}
+                </p>
+              )}
             </div>
           </div>
         </div>
