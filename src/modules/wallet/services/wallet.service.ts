@@ -138,10 +138,10 @@ export class WalletService {
 
       // Use API route to fund the smart wallet
       const response = await fetch(`/api/fund/${contractId}`);
-      
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fund wallet');
+        throw new Error(errorData.error || "Failed to fund wallet");
       }
 
       const result = await response.json();
