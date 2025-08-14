@@ -94,9 +94,7 @@ export const useWalletStore = create<WalletState & WalletActions>(
     async requestFunds(contractId: string, amount: number = 10000) {
       set({ isLoading: true, error: null });
       try {
-        const fundRequest = await walletService.requestTestnetFunds(
-          contractId
-        );
+        const fundRequest = await walletService.requestTestnetFunds(contractId);
         set({ fundRequest, isLoading: false });
 
         if (fundRequest.status === "completed") {
@@ -131,12 +129,7 @@ export const useWalletStore = create<WalletState & WalletActions>(
     ) {
       set({ isLoading: true, error: null });
       try {
-        await walletService.sendXLM(
-          to,
-          amount,
-          keyId,
-          contractId
-        );
+        await walletService.sendXLM(to, amount, keyId, contractId);
         set({ isLoading: false });
 
         toast.success("XLM sent successfully!", {

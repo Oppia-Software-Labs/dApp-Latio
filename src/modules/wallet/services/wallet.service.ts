@@ -12,8 +12,6 @@ import {
   isAccountSessionConfigured,
 } from "@/lib/passkey";
 
-
-
 export class WalletService {
   private static instance: WalletService;
 
@@ -121,9 +119,7 @@ export class WalletService {
   /**
    * Request testnet funds using API route
    */
-                async requestTestnetFunds(
-                contractId: string
-              ): Promise<FundRequest> {
+  async requestTestnetFunds(contractId: string): Promise<FundRequest> {
     if (!contractId || contractId.trim() === "") {
       throw new Error("Invalid contract ID: contractId is empty or undefined");
     }
