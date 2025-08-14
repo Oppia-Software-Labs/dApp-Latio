@@ -1,4 +1,5 @@
 import { WalletBalance, WalletInfo, FundRequest } from "../types/wallet.types";
+import { native, fundContract } from "@/lib/passkey";
 
 interface StellarBalance {
   asset_type: string;
@@ -26,24 +27,16 @@ export class WalletService {
    * Get real wallet balance from Stellar network
    */
   async getWalletBalance(contractId: string): Promise<WalletBalance> {
+    if (!contractId || contractId.trim() === "") {
+      throw new Error("Invalid contract ID: contractId is empty or undefined");
+    }
+
     try {
-      console.log('Fetching balance for contractId:', contractId);
-      
-      // For now, simulate real balance fetching
-      // In production, this would call the Stellar Horizon API directly
-      const response = await fetch(`https://horizon-testnet.stellar.org/accounts/${contractId}`);
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch account: ${response.statusText}`);
-      }
-      
-      const accountData = await response.json();
-      
-      // Get XLM balance (native asset)
-      const xlmBalance = accountData.balances.find(
-        (balance: StellarBalance) => balance.asset_type === "native"
-      );
-      const xlmAmount = xlmBalance ? parseFloat(xlmBalance.balance) : 0;
+      console.log("Fetching balance for contractId:", contractId);
+
+      // Get balance using native client from passkey
+      const accountData = await native.balance({ id: contractId });
+      const xlmAmount = parseFloat(accountData.result.toString());
 
       // Mock USD conversion (in real app, you'd use a real exchange rate API)
       const usdAmount = xlmAmount * 0.12; // Mock rate: 1 XLM = $0.12
@@ -93,12 +86,14 @@ export class WalletService {
    */
   async getWalletInfo(contractId: string): Promise<WalletInfo> {
     try {
-      const response = await fetch(`https://horizon-testnet.stellar.org/accounts/${contractId}`);
-      
+      const response = await fetch(
+        `https://horizon-testnet.stellar.org/accounts/${contractId}`
+      );
+
       if (!response.ok) {
         throw new Error(`Failed to fetch account: ${response.statusText}`);
       }
-      
+
       const accountData = await response.json();
 
       return {
@@ -121,29 +116,25 @@ export class WalletService {
   }
 
   /**
-   * Request testnet funds (Friendbot)
+   * Request testnet funds using fundContract
    */
   async requestTestnetFunds(
     contractId: string,
     amount: number = 10000
   ): Promise<FundRequest> {
+    if (!contractId || contractId.trim() === "") {
+      throw new Error("Invalid contract ID: contractId is empty or undefined");
+    }
+
     try {
-      console.log('Requesting testnet funds for contractId:', contractId);
-      
-      // Friendbot endpoint for testnet funding
-      const response = await fetch(
-        `https://friendbot.stellar.org/?addr=${contractId}`
-      );
+      console.log("Requesting testnet funds for contractId:", contractId);
 
-      if (!response.ok) {
-        throw new Error(`Friendbot request failed: ${response.statusText}`);
-      }
-
-      const result = await response.json();
+      // Use fundContract to fund the smart wallet
+      const result = await fundContract(contractId);
 
       return {
-        amount: amount / 1000000, // Convert from stroops to XLM
-        currency: "XLM",
+        amount: result.amount,
+        currency: result.currency,
         status: "completed",
         timestamp: new Date(),
         transactionId: result.hash,
@@ -151,7 +142,7 @@ export class WalletService {
     } catch (error) {
       console.error("Error requesting testnet funds:", error);
       return {
-        amount: amount / 1000000,
+        amount: 0,
         currency: "XLM",
         status: "failed",
         timestamp: new Date(),
@@ -167,16 +158,16 @@ export class WalletService {
     limit: number = 10
   ): Promise<StellarTransaction[]> {
     try {
-      console.log('Fetching transactions for contractId:', contractId);
-      
+      console.log("Fetching transactions for contractId:", contractId);
+
       const response = await fetch(
         `https://horizon-testnet.stellar.org/accounts/${contractId}/transactions?limit=${limit}&order=desc`
       );
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch transactions: ${response.statusText}`);
       }
-      
+
       const data = await response.json();
       return data._embedded.records || [];
     } catch (error) {

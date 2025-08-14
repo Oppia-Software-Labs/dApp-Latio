@@ -15,21 +15,35 @@ export const mockPubkey = StrKey.encodeEd25519PublicKey(Buffer.alloc(32));
 export const mockSource = new Account(mockPubkey, "0");
 
 export const fundKeypairPromise: Promise<Keypair> = (async () => {
-  const now = new Date(); now.setMinutes(0,0,0);
+  const now = new Date();
+  now.setMinutes(0, 0, 0);
   const hashBuffer = await crypto.subtle.digest(
     "SHA-256",
     new TextEncoder().encode(now.getTime().toString())
   );
   const kp = Keypair.fromRawEd25519Seed(Buffer.from(hashBuffer));
-  try { await rpc.getAccount(kp.publicKey()); }
-  catch { try { await rpc.requestAirdrop(kp.publicKey()); } catch {} }
+  try {
+    await rpc.getAccount(kp.publicKey());
+  } catch {
+    try {
+      await rpc.requestAirdrop(kp.publicKey());
+    } catch {}
+  }
   return kp;
 })();
-export async function getFundPubkey() { return (await fundKeypairPromise).publicKey(); }
-export async function getFundSigner() { return basicNodeSigner(await fundKeypairPromise, networkPassphrase); }
+export async function getFundPubkey() {
+  return (await fundKeypairPromise).publicKey();
+}
+export async function getFundSigner() {
+  return basicNodeSigner(await fundKeypairPromise, networkPassphrase);
+}
 
-export const account = new PasskeyKit({ rpcUrl, networkPassphrase, walletWasmHash });
-export const server  = new PasskeyServer({
+export const account = new PasskeyKit({
+  rpcUrl,
+  networkPassphrase,
+  walletWasmHash,
+});
+export const server = new PasskeyServer({
   rpcUrl,
   launchtubeUrl: ENV.LAUNCHTUBE_URL,
   launchtubeJwt: ENV.LAUNCHTUBE_JWT,
@@ -40,3 +54,46 @@ export const server  = new PasskeyServer({
 
 export const sac = new SACClient({ rpcUrl, networkPassphrase });
 export const native = sac.getSACClient(ENV.NATIVE_CONTRACT_ID);
+
+/**
+ * Fund a smart wallet with XLM using the funder keypair
+ * @param address - The smart wallet address to fund
+ * @returns Promise with the funding result
+ */
+export async function fundContract(address: string) {
+  if (!address || address.trim() === "") {
+    throw new Error("Invalid address: address is empty or undefined");
+  }
+
+  try {
+    console.log(`Funding smart wallet: ${address}`);
+
+    const fundKeypair = await fundKeypairPromise;
+    const fundSigner = basicNodeSigner(fundKeypair, networkPassphrase);
+
+    // Create transfer transaction
+    const { built, ...transfer } = await native.transfer({
+      from: fundKeypair.publicKey(),
+      to: address,
+      amount: BigInt(25 * 10_000_000), // 25 XLM in stroops
+    });
+
+    // Sign the transaction
+    await transfer.signAuthEntries({
+      signAuthEntry: (auth) => fundSigner.signAuthEntry(auth),
+    });
+
+    // Send the transaction
+    const result = await server.send(built!.toXDR());
+
+    return {
+      hash: result.hash,
+      status: "completed",
+      amount: 25,
+      currency: "XLM",
+    };
+  } catch (error) {
+    console.error("Error funding contract:", error);
+    throw new Error(`Failed to fund smart wallet: ${error}`);
+  }
+}
