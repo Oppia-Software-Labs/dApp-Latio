@@ -107,3 +107,52 @@ export function hasSufficientBalance(
   const availableBalance = getCurrencyBalance(walletBalance, currencyCode);
   return availableBalance >= amount;
 }
+
+/**
+ * Calculate real Stellar network fee
+ * Stellar network fee is typically 0.00001 XLM (100 stroops)
+ */
+export function calculateStellarFee(): number {
+  return 0.00001; // 100 stroops = 0.00001 XLM
+}
+
+/**
+ * Calculate fee in different currencies
+ */
+export function calculateFee(currencyCode: string): number {
+  const stellarFee = calculateStellarFee();
+  
+  switch (currencyCode) {
+    case "XLM":
+      return stellarFee;
+    case "USD":
+      return stellarFee * 0.12; // Convert XLM fee to USD
+    case "EUR":
+      return stellarFee * 0.102; // Convert XLM fee to EUR
+    default:
+      return stellarFee;
+  }
+}
+
+/**
+ * Calculate XLM equivalent for any amount
+ */
+export function calculateXlmEquivalent(amount: number, currencyCode: string): number {
+  switch (currencyCode) {
+    case "XLM":
+      return amount;
+    case "USD":
+      return amount / 0.12; // Convert USD to XLM
+    case "EUR":
+      return amount / 0.102; // Convert EUR to XLM
+    default:
+      return amount;
+  }
+}
+
+/**
+ * Calculate total amount including fee
+ */
+export function calculateTotal(amount: number, fee: number): number {
+  return amount + fee;
+}

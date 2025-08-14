@@ -9,12 +9,10 @@ import { useWalletStore } from "@/modules/wallet/state/wallet.store";
 import {
   getAvailableCurrencies,
   formatBalance,
-} from "@/modules/wallet/utils/balance.util";
-import {
   calculateFee,
   calculateXlmEquivalent,
   calculateTotal,
-} from "../../../data/send-mock-data";
+} from "@/modules/wallet/utils/balance.util";
 import { SendAmount } from "../../../types/send.types";
 import { ArrowLeft, DollarSign, Calculator } from "lucide-react";
 import { StellarAddress } from "@/components/ui/stellar-address";
@@ -31,7 +29,7 @@ export function AmountStep() {
   const [amount, setAmountValue] = useState("");
   const [description, setDescriptionValue] = useState("");
 
-  const fee = calculateFee(selectedCurrency.code, parseFloat(amount) || 0);
+  const fee = calculateFee(selectedCurrency.code);
   const xlmEquivalent = calculateXlmEquivalent(
     parseFloat(amount) || 0,
     selectedCurrency.code
