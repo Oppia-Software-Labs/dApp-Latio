@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { StellarAddress } from "@/components/ui/stellar-address";
 import { useSendStore } from "../../../state/send.store";
 import { useAuth } from "@/modules/auth/hooks/useAuth";
 import { ArrowLeft, Shield, CheckCircle } from "lucide-react";
@@ -18,7 +19,7 @@ export function ConfirmStep() {
     sendTransaction,
     isLoading,
   } = useSendStore();
-  
+
   const { keyId, contractId } = useAuth();
 
   const handleBack = () => {
@@ -59,7 +60,9 @@ export function ConfirmStep() {
             <p className="font-medium text-sm text-foreground">
               {recipient.name}
             </p>
-            <p className="text-xs text-muted-foreground">{recipient.address}</p>
+            <p className="text-xs text-muted-foreground">
+              <StellarAddress address={recipient.address} />
+            </p>
           </div>
         </div>
 

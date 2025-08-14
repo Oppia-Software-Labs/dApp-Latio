@@ -4,12 +4,12 @@ import {
   FundRequest,
   WalletTransaction,
 } from "../types/wallet.types";
-import { 
-  native, 
-  account, 
-  server, 
+import {
+  native,
+  account,
+  server,
   configureAccountSession,
-  isAccountSessionConfigured 
+  isAccountSessionConfigured,
 } from "@/lib/passkey";
 
 interface StellarBalance {

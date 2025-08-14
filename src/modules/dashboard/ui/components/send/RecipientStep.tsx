@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { StellarAddress } from "@/components/ui/stellar-address";
 import { useSendStore } from "../../../state/send.store";
 import { mockRecipients } from "../../../data/send-mock-data";
 import { Search, User, Clock, Plus, Send } from "lucide-react";
@@ -122,7 +123,7 @@ export function RecipientStep() {
                         {recipient.name}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {recipient.address}
+                        <StellarAddress address={recipient.address} />
                       </p>
                     </div>
                   </button>
@@ -157,7 +158,7 @@ export function RecipientStep() {
                         {recipient.name}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {recipient.address}
+                        <StellarAddress address={recipient.address} />
                       </p>
                     </div>
                   </button>
